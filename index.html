@@ -22,8 +22,9 @@
         }
         .menu-content {
             background: rgba(30,40,50,0.95); padding: 20px 25px; border-radius: 30px;
-            max-width: 700px; width: 90%; max-height: 90vh; overflow-y: auto;
+            max-width: 750px; width: 90%; max-height: 90vh; overflow-y: auto;
             box-shadow: 0 20px 40px rgba(0,0,0,0.7); border: 1px solid #6a8aaa;
+            position: relative;
         }
         .menu-content h1 { color: #ffcc88; font-size: 28px; margin-bottom: 5px; }
         
@@ -79,6 +80,76 @@
             font-size: 18px; font-weight: bold; border-radius: 50px; cursor: pointer;
             margin-top: 15px; border-bottom: 5px solid #3a6a4a; width: 100%;
         }
+
+        .promo-section {
+            margin: 15px 0; padding: 12px; background: rgba(0,0,0,0.3); border-radius: 15px;
+            border: 1px solid #6a8aaa;
+        }
+        .promo-title {
+            color: #ffcc88; font-size: 14px; margin-bottom: 10px;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .promo-input-group { display: flex; gap: 8px; }
+        .promo-input {
+            flex: 1; padding: 10px; border-radius: 10px; border: none;
+            background: rgba(20,30,40,0.9); color: #ffd966; font-size: 14px;
+            border: 1px solid #6a8aaa;
+        }
+        .promo-input::placeholder { color: #8899aa; }
+        .promo-btn {
+            background: #4a6a8a; color: white; border: none; padding: 10px 20px;
+            border-radius: 10px; cursor: pointer; font-weight: bold;
+        }
+
+        .crown-icon {
+            position: absolute; top: 10px; right: 10px;
+            font-size: 24px; cursor: pointer; opacity: 0.3;
+            transition: opacity 0.2s; z-index: 10;
+        }
+        .crown-icon:hover { opacity: 1; }
+        .admin-console {
+            margin-top: 15px; padding: 15px; background: rgba(40,20,30,0.9);
+            border-radius: 15px; border: 1px solid #aa6688; display: none;
+        }
+        .admin-console.active { display: block; }
+        .admin-title { color: #ffaacc; font-size: 14px; margin-bottom: 10px; }
+        .admin-input {
+            width: 100%; padding: 8px; margin: 5px 0; border-radius: 8px;
+            background: rgba(20,10,15,0.9); color: #ffccaa; border: 1px solid #aa6688;
+        }
+        .admin-btn {
+            background: #884466; color: white; border: none; padding: 6px 15px;
+            border-radius: 8px; cursor: pointer; margin: 5px 5px 0 0;
+        }
+        .promo-list {
+            max-height: 150px; overflow-y: auto; margin: 10px 0;
+            color: #ccaa99; font-size: 12px;
+        }
+
+        .password-modal {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7); backdrop-filter: blur(5px);
+            display: flex; justify-content: center; align-items: center;
+            z-index: 2000; border-radius: 30px;
+        }
+        .password-box {
+            background: rgba(40,30,40,0.95); padding: 25px; border-radius: 20px;
+            text-align: center; border: 2px solid #aa6688; max-width: 300px; width: 90%;
+        }
+        .password-box h3 { color: #ffaacc; margin-bottom: 15px; }
+        .password-input {
+            width: 100%; padding: 12px; border-radius: 10px; border: none;
+            background: rgba(20,10,15,0.9); color: #ffccaa; font-size: 16px;
+            border: 1px solid #aa6688; margin-bottom: 15px; text-align: center;
+            -webkit-text-security: disc;
+        }
+        .password-input:focus { outline: 2px solid #cc88aa; }
+        .password-buttons { display: flex; gap: 10px; justify-content: center; }
+        .password-btn {
+            background: #884466; color: white; border: none; padding: 10px 20px;
+            border-radius: 10px; cursor: pointer; font-weight: bold; flex: 1;
+        }
+        .password-btn.cancel { background: #555566; }
         
         #game-ui { opacity: 1; pointer-events: none; }
         #ui-top {
@@ -194,24 +265,30 @@
             overflow: hidden;
             transform: translate(-50%, -50%);
         }
-        .health-fill {
-            height: 100%;
-            background: #ff4444;
-            transition: width 0.2s;
-        }
+        .health-fill { height: 100%; background: #ff4444; transition: width 0.2s; }
     </style>
 </head>
 <body>
     <div id="start-menu">
         <div class="menu-content">
+            <div class="crown-icon" id="crown-icon">👑</div>
             <h1>🐦 Птица в деревне</h1>
-            <div class="coins-display" id="menu-coins">🪙 0 монет</div>
+            <div class="coins-display" id="menu-coins">🪙 500 монет</div>
+            
+            <div class="promo-section">
+                <div class="promo-title">🎁 Промокод</div>
+                <div class="promo-input-group">
+                    <input type="text" class="promo-input" id="promo-input" placeholder="Введите код" autocomplete="off" autocapitalize="characters">
+                    <button class="promo-btn" id="promo-activate">Активировать</button>
+                </div>
+            </div>
+            
             <div class="control-selector">
                 <button class="control-btn active" data-control="pc">💻 ПК</button>
                 <button class="control-btn" data-control="mobile">📱 Телефон</button>
             </div>
             
-            <div class="skins-title">🎨 Образы</div>
+            <div class="skins-title">🎨 Образы (5 легендарных по 1000🪙)</div>
             <div class="skins-grid" id="skins-container"></div>
             
             <div class="upgrade-section">
@@ -221,13 +298,35 @@
                 <button class="upgrade-btn" id="upgrade-ability">✨ Суперспособность (100🪙)</button>
             </div>
             
+            <div class="admin-console" id="admin-console">
+                <div class="admin-title">🔐 Админ-консоль</div>
+                <input type="text" class="admin-input" id="admin-command" placeholder="promoadd КОД МОНЕТЫ" autocomplete="off">
+                <div style="display:flex; gap:5px;">
+                    <button class="admin-btn" id="admin-execute">Выполнить</button>
+                    <button class="admin-btn" id="admin-list">Список</button>
+                    <button class="admin-btn" id="admin-close">Закрыть</button>
+                </div>
+                <div class="promo-list" id="promo-list"></div>
+            </div>
+            
+            <div class="password-modal" id="password-modal" style="display: none;">
+                <div class="password-box">
+                    <h3>👑 Введите пароль</h3>
+                    <input type="text" class="password-input" id="password-input" placeholder="••••••••" autocomplete="off" name="fake-password">
+                    <div class="password-buttons">
+                        <button class="password-btn" id="password-submit">Войти</button>
+                        <button class="password-btn cancel" id="password-cancel">Отмена</button>
+                    </div>
+                </div>
+            </div>
+            
             <button class="start-btn" id="start-game-btn">НАЧАТЬ ПОЛЁТ</button>
         </div>
     </div>
 
     <div id="game-ui">
         <div id="ui-top">🐦 <span id="bird-name">Воробей</span></div>
-        <div id="game-coins">🪙 <span id="game-coins-value">0</span></div>
+        <div id="game-coins">🪙 <span id="game-coins-value">500</span></div>
         <div id="time-indicator">🌞 День</div>
         <div id="status-bar">
             <span>🏹 <span id="hunter-count">2</span></span>
@@ -274,7 +373,20 @@
         import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
 
         const SAVE_KEY = 'birdVillageSave';
-        let gameData = { coins: 500, unlockedSkins: [0], skins: [] };
+        const PROMO_STORAGE_KEY = 'birdPromoCodes';
+        const ADMIN_PASSWORD = 'bird14lollolandr';
+        
+        let promoCodes = {};
+        
+        function loadPromoCodes() {
+            const saved = localStorage.getItem(PROMO_STORAGE_KEY);
+            if (saved) promoCodes = JSON.parse(saved);
+            else promoCodes = {};
+        }
+        function savePromoCodes() { localStorage.setItem(PROMO_STORAGE_KEY, JSON.stringify(promoCodes)); }
+        loadPromoCodes();
+        
+        let gameData = { coins: 500, unlockedSkins: [0], skins: [], usedPromos: [] };
         
         const baseSkins = [
             { name: 'Воробей', emoji: '🐦', color: 0xcc9944, size: 0.8, speed: 1.2, agility: 1.3, price: 0, ability: 'Ускорение' },
@@ -286,17 +398,24 @@
             { name: 'Фламинго', emoji: '🦩', color: 0xff69b4, size: 1.1, speed: 0.85, agility: 0.6, price: 90, ability: 'Грация' },
             { name: 'Колибри', emoji: '🐦', color: 0x00ff88, size: 0.6, speed: 1.5, agility: 2.0, price: 200, ability: 'Телепорт' },
             { name: 'Пингвин', emoji: '🐧', color: 0x334455, size: 0.9, speed: 0.7, agility: 0.5, price: 70, ability: 'Скольжение' },
-            { name: 'Феникс', emoji: '🔥', color: 0xff6600, size: 1.0, speed: 1.3, agility: 1.1, price: 300, ability: 'Возрождение' }
+            { name: 'Феникс', emoji: '🔥', color: 0xff6600, size: 1.0, speed: 1.3, agility: 1.1, price: 300, ability: 'Возрождение' },
+            { name: 'Дракон', emoji: '🐉', color: 0x44aa44, size: 1.4, speed: 1.0, agility: 0.8, price: 1000, ability: 'Огненное дыхание' },
+            { name: 'Птеродактиль', emoji: '🦇', color: 0x664422, size: 1.5, speed: 1.2, agility: 0.6, price: 1000, ability: 'Крик ужаса' },
+            { name: 'Ангел', emoji: '👼', color: 0xffdd88, size: 1.0, speed: 1.1, agility: 1.3, price: 1000, ability: 'Исцеление' },
+            { name: 'Демон', emoji: '👿', color: 0x882222, size: 1.1, speed: 1.4, agility: 1.2, price: 1000, ability: 'Проклятие' },
+            { name: 'Кибер-птица', emoji: '🤖', color: 0x4488cc, size: 1.0, speed: 1.6, agility: 1.5, price: 1000, ability: 'ЭМИ' }
         ];
         
         function loadGame() {
             const saved = localStorage.getItem(SAVE_KEY);
             if (saved) {
                 gameData = JSON.parse(saved);
+                if (!gameData.usedPromos) gameData.usedPromos = [];
                 gameData.skins.forEach((s, i) => { if (baseSkins[i]) { baseSkins[i].speed = s.speed; baseSkins[i].agility = s.agility; baseSkins[i].abilityLevel = s.abilityLevel || 1; } });
             } else {
                 gameData.skins = baseSkins.map(s => ({ speed: s.speed, agility: s.agility, abilityLevel: 1 }));
                 gameData.unlockedSkins = [0];
+                gameData.usedPromos = [];
             }
             updateCoinsDisplay();
         }
@@ -306,16 +425,55 @@
         }
         function updateCoinsDisplay() {
             document.getElementById('menu-coins').textContent = `🪙 ${gameData.coins} монет`;
-            document.getElementById('game-coins-value').textContent = gameData.coins;
+            if (document.getElementById('game-coins-value')) document.getElementById('game-coins-value').textContent = gameData.coins;
         }
         loadGame();
         
-        let selectedSkinIndex = 0, controlMode = 'pc', gameStarted = false;
-        let bird, leftWing, rightWing, abilityCooldown = 0, abilityActive = false;
-        let dayTime = 0.5;
-        let nightVisionActive = false;
+        function activatePromoCode(code) {
+            if (!code) return showMessage('❌ Введите промокод');
+            const upperCode = code.toUpperCase();
+            if (gameData.usedPromos.includes(upperCode)) return showMessage('⚠️ Промокод уже использован');
+            const promo = promoCodes[upperCode];
+            if (!promo) return showMessage('❌ Неверный промокод');
+            if (promo.coins) { gameData.coins += promo.coins; showMessage(`🎉 +${promo.coins} монет!`); }
+            if (promo.skin !== undefined && !gameData.unlockedSkins.includes(promo.skin)) { gameData.unlockedSkins.push(promo.skin); showMessage(`🦜 Открыт новый образ!`); }
+            gameData.usedPromos.push(upperCode);
+            saveGame(); updateCoinsDisplay(); renderSkinGrid();
+        }
         
+        function adminAddPromo(code, coins) {
+            if (!code || !coins) return '❌ Формат: promoadd КОД МОНЕТЫ';
+            const upperCode = code.toUpperCase();
+            promoCodes[upperCode] = { coins: parseInt(coins) };
+            savePromoCodes();
+            return `✅ Промокод ${upperCode} добавлен (${coins}🪙)`;
+        }
+        function adminRemovePromo(code) {
+            if (!code) return '❌ Формат: promoremove КОД';
+            const upperCode = code.toUpperCase();
+            if (promoCodes[upperCode]) { delete promoCodes[upperCode]; savePromoCodes(); return `✅ Промокод ${upperCode} удалён`; }
+            return `❌ Промокод ${upperCode} не найден`;
+        }
+        function adminListPromos() {
+            const codes = Object.entries(promoCodes);
+            if (codes.length === 0) return '📋 Нет активных промокодов';
+            return codes.map(([code, data]) => `${code}: ${data.coins}🪙`).join('\n');
+        }
+        function executeAdminCommand(cmd) {
+            const parts = cmd.trim().split(/\s+/);
+            if (parts.length === 0) return 'Введите команду';
+            const command = parts[0].toLowerCase();
+            if (command === 'promoadd') { if (parts.length < 3) return '❌ promoadd КОД МОНЕТЫ'; return adminAddPromo(parts[1], parts[2]); }
+            else if (command === 'promoremove') { if (parts.length < 2) return '❌ promoremove КОД'; return adminRemovePromo(parts[1]); }
+            else if (command === 'promolist') return adminListPromos();
+            else return '❌ Неизвестная команда';
+        }
+        
+        let selectedSkinIndex = 0, controlMode = 'pc', gameStarted = false;
+        let bird, leftWing, rightWing, abilityCooldown = 0, dayTime = 0.5, nightVisionActive = false;
+        let demonMode = false;
         const container = document.getElementById('skins-container');
+        
         function renderSkinGrid() {
             container.innerHTML = '';
             baseSkins.forEach((skin, i) => {
@@ -324,12 +482,8 @@
                 card.className = 'skin-card' + (i === selectedSkinIndex ? ' active' : '') + (unlocked ? '' : ' locked');
                 card.innerHTML = `<div class="skin-emoji">${skin.emoji}</div><div class="skin-name">${skin.name}</div><div class="skin-stats">⚡${skin.speed.toFixed(1)} 🌀${skin.agility.toFixed(1)}</div>${!unlocked ? `<div class="skin-price">🔒 ${skin.price}🪙</div>` : ''}<div class="skin-ability">✨ ${skin.ability}</div>`;
                 card.addEventListener('click', () => {
-                    if (!unlocked) {
-                        if (gameData.coins >= skin.price) { gameData.coins -= skin.price; gameData.unlockedSkins.push(i); saveGame(); updateCoinsDisplay(); renderSkinGrid(); showMessage(`Куплен: ${skin.name}!`); }
-                        else showMessage('Недостаточно монет!');
-                        return;
-                    }
-                    selectedSkinIndex = i; renderSkinGrid(); if (!gameStarted) updatePreviewBird();
+                    if (!unlocked) { if (gameData.coins >= skin.price) { gameData.coins -= skin.price; gameData.unlockedSkins.push(i); saveGame(); updateCoinsDisplay(); renderSkinGrid(); showMessage(`Куплен: ${skin.name}!`); } else showMessage('Недостаточно монет!'); return; }
+                    selectedSkinIndex = i; demonMode = (skin.name === 'Демон'); renderSkinGrid(); if (!gameStarted) updatePreviewBird();
                 });
                 container.appendChild(card);
             });
@@ -339,8 +493,33 @@
         document.getElementById('upgrade-speed').addEventListener('click', () => { const s = baseSkins[selectedSkinIndex]; if (gameData.coins >= 50) { gameData.coins -= 50; s.speed *= 1.1; saveGame(); updateCoinsDisplay(); renderSkinGrid(); } });
         document.getElementById('upgrade-agility').addEventListener('click', () => { const s = baseSkins[selectedSkinIndex]; if (gameData.coins >= 50) { gameData.coins -= 50; s.agility *= 1.1; saveGame(); updateCoinsDisplay(); renderSkinGrid(); } });
         document.getElementById('upgrade-ability').addEventListener('click', () => { const s = baseSkins[selectedSkinIndex]; if (gameData.coins >= 100) { gameData.coins -= 100; s.abilityLevel = (s.abilityLevel || 1) + 1; saveGame(); updateCoinsDisplay(); renderSkinGrid(); } });
-        
         document.querySelectorAll('[data-control]').forEach(btn => btn.addEventListener('click', () => { document.querySelectorAll('[data-control]').forEach(b => b.classList.remove('active')); btn.classList.add('active'); controlMode = btn.dataset.control; }));
+        
+        document.getElementById('promo-activate').addEventListener('click', () => { const input = document.getElementById('promo-input'); activatePromoCode(input.value); input.value = ''; });
+        document.getElementById('promo-input').addEventListener('keypress', (e) => { if (e.key === 'Enter') document.getElementById('promo-activate').click(); });
+        
+        const passwordModal = document.getElementById('password-modal');
+        const passwordInput = document.getElementById('password-input');
+        const crown = document.getElementById('crown-icon');
+        const adminConsole = document.getElementById('admin-console');
+        let adminUnlocked = false;
+        
+        passwordInput.setAttribute('autocomplete', 'off');
+        passwordInput.setAttribute('name', 'fake-password-' + Math.random());
+        
+        function showPasswordModal() { passwordModal.style.display = 'flex'; passwordInput.value = ''; setTimeout(() => passwordInput.focus(), 50); }
+        function hidePasswordModal() { passwordModal.style.display = 'none'; }
+        
+        crown.addEventListener('click', (e) => { e.stopPropagation(); if (!adminUnlocked) showPasswordModal(); else adminConsole.classList.toggle('active'); });
+        document.getElementById('password-submit').addEventListener('click', () => { if (passwordInput.value === ADMIN_PASSWORD) { adminUnlocked = true; adminConsole.classList.add('active'); hidePasswordModal(); showMessage('✅ Админ-консоль открыта'); } else { showMessage('❌ Неверный пароль'); hidePasswordModal(); } });
+        document.getElementById('password-cancel').addEventListener('click', hidePasswordModal);
+        passwordModal.addEventListener('click', (e) => { if (e.target === passwordModal) hidePasswordModal(); });
+        passwordInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') document.getElementById('password-submit').click(); });
+        
+        document.getElementById('admin-close').addEventListener('click', () => adminConsole.classList.remove('active'));
+        document.getElementById('admin-execute').addEventListener('click', () => { const cmd = document.getElementById('admin-command'); document.getElementById('promo-list').textContent = executeAdminCommand(cmd.value); cmd.value = ''; });
+        document.getElementById('admin-list').addEventListener('click', () => { document.getElementById('promo-list').textContent = adminListPromos(); });
+        document.getElementById('admin-command').addEventListener('keypress', (e) => { if (e.key === 'Enter') document.getElementById('admin-execute').click(); });
 
         let audioContext = null;
         function initAudio() { if(!audioContext) try { audioContext = new (window.AudioContext || window.webkitAudioContext)(); } catch(e) {} }
@@ -350,16 +529,13 @@
         const scene = new THREE.Scene();
         scene.background = new THREE.Color(0x7a9ab5);
         scene.fog = new THREE.FogExp2(0x7a9ab5, 0.0015);
-        
         const camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 1000);
         camera.position.set(0, 18, 30);
-        
         const renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.shadowMap.enabled = true;
         renderer.shadowMap.type = THREE.PCFSoftShadowMap;
         document.body.appendChild(renderer.domElement);
-        
         const cssRenderer = new CSS2DRenderer();
         cssRenderer.setSize(window.innerWidth, window.innerHeight);
         cssRenderer.domElement.style.position = 'absolute';
@@ -367,497 +543,131 @@
         cssRenderer.domElement.style.pointerEvents = 'none';
         document.body.appendChild(cssRenderer.domElement);
 
-        const ambientLight = new THREE.AmbientLight(0x556677, 0.6);
-        scene.add(ambientLight);
-        const sunLight = new THREE.DirectionalLight(0xeeddcc, 1.2);
-        sunLight.position.set(60, 100, 40);
-        sunLight.castShadow = true; sunLight.receiveShadow = true;
-        sunLight.shadow.mapSize.width = 1024; sunLight.shadow.mapSize.height = 1024;
-        const d = 200;
-        sunLight.shadow.camera.left = -d; sunLight.shadow.camera.right = d;
-        sunLight.shadow.camera.top = d; sunLight.shadow.camera.bottom = -d;
-        sunLight.shadow.camera.near = 1; sunLight.shadow.camera.far = 350;
-        scene.add(sunLight);
-        
-        const moonLight = new THREE.DirectionalLight(0x8899bb, 0.4);
-        moonLight.position.set(-40, 60, -50);
-        moonLight.castShadow = true; moonLight.receiveShadow = true;
-        moonLight.shadow.mapSize.width = 512; moonLight.shadow.mapSize.height = 512;
-        scene.add(moonLight);
+        const ambientLight = new THREE.AmbientLight(0x556677, 0.6); scene.add(ambientLight);
+        const sunLight = new THREE.DirectionalLight(0xeeddcc, 1.2); sunLight.position.set(60, 100, 40); sunLight.castShadow = true; sunLight.receiveShadow = true; sunLight.shadow.mapSize.width = 1024; sunLight.shadow.mapSize.height = 1024; const d = 200; sunLight.shadow.camera.left = -d; sunLight.shadow.camera.right = d; sunLight.shadow.camera.top = d; sunLight.shadow.camera.bottom = -d; sunLight.shadow.camera.near = 1; sunLight.shadow.camera.far = 350; scene.add(sunLight);
+        const moonLight = new THREE.DirectionalLight(0x8899bb, 0.4); moonLight.position.set(-40, 60, -50); moonLight.castShadow = true; moonLight.receiveShadow = true; moonLight.shadow.mapSize.width = 512; moonLight.shadow.mapSize.height = 512; scene.add(moonLight);
 
         const mapSize = 300, boundary = mapSize - 10;
-        const ground = new THREE.Mesh(new THREE.CircleGeometry(mapSize, 64), new THREE.MeshStandardMaterial({color: 0x6a8a5e}));
-        ground.rotation.x = -Math.PI/2; ground.position.y = 0; ground.receiveShadow = true;
-        scene.add(ground);
-        const grid = new THREE.GridHelper(mapSize*2, 30, 0x557755, 0x446644);
-        grid.position.y = 0.01; scene.add(grid);
+        const ground = new THREE.Mesh(new THREE.CircleGeometry(mapSize, 64), new THREE.MeshStandardMaterial({color: 0x6a8a5e})); ground.rotation.x = -Math.PI/2; ground.position.y = 0; ground.receiveShadow = true; scene.add(ground);
+        const grid = new THREE.GridHelper(mapSize*2, 30, 0x557755, 0x446644); grid.position.y = 0.01; scene.add(grid);
+        const postMat = new THREE.MeshStandardMaterial({color: 0x7a6a5a}); for(let i=0; i<50; i++) { const a = (i/50)*Math.PI*2; const post = new THREE.Mesh(new THREE.CylinderGeometry(0.5,0.6,2.2), postMat); post.position.set(Math.cos(a)*boundary, 1.1, Math.sin(a)*boundary); post.receiveShadow = true; post.castShadow = true; scene.add(post); }
+        const river = new THREE.Mesh(new THREE.PlaneGeometry(12, 280), new THREE.MeshStandardMaterial({color: 0x4a7a9a, transparent: true})); river.rotation.x = -Math.PI/2; river.position.y = 0.02; river.position.z = 15; scene.add(river);
         
-        const postMat = new THREE.MeshStandardMaterial({color: 0x7a6a5a});
-        for(let i=0; i<50; i++) {
-            const a = (i/50)*Math.PI*2;
-            const post = new THREE.Mesh(new THREE.CylinderGeometry(0.5,0.6,2.2), postMat);
-            post.position.set(Math.cos(a)*boundary, 1.1, Math.sin(a)*boundary);
-            post.receiveShadow = true; post.castShadow = true;
-            scene.add(post);
-        }
-        
-        const river = new THREE.Mesh(new THREE.PlaneGeometry(12, 280), new THREE.MeshStandardMaterial({color: 0x4a7a9a, transparent: true}));
-        river.rotation.x = -Math.PI/2; river.position.y = 0.02; river.position.z = 15;
-        scene.add(river);
-        
-        function makeHouse(x, z, c) {
-            const g = new THREE.Group();
-            const w = new THREE.Mesh(new THREE.BoxGeometry(3.8,2.8,3.8), new THREE.MeshStandardMaterial({color: [0xb0a090,0xa09080,0x9a8a7a][c%3]}));
-            w.position.y = 1.4; w.castShadow = true; w.receiveShadow = true; g.add(w);
-            const roof = new THREE.Mesh(new THREE.ConeGeometry(3.0,1.6,4), new THREE.MeshStandardMaterial({color: 0x7a5a4a}));
-            roof.position.y = 3.0; roof.rotation.y = Math.PI/4; roof.castShadow = true; g.add(roof);
-            g.position.set(x, 0, z); return g;
-        }
-        for(let i=0; i<15; i++) {
-            let x,z;
-            do { const a=Math.random()*Math.PI*2, r=50+Math.random()*160; x=Math.cos(a)*r; z=Math.sin(a)*r; } while(Math.abs(x)<18 && z>-25 && z<70);
-            scene.add(makeHouse(x,z,i));
-        }
-        
-        function tree(x,z) {
-            const g = new THREE.Group();
-            const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.6,0.8,2.8), new THREE.MeshStandardMaterial({color: 0x6a5a4a}));
-            trunk.position.y=1.4; trunk.castShadow=true; trunk.receiveShadow=true; g.add(trunk);
-            const foliage = new THREE.Mesh(new THREE.ConeGeometry(2.0,2.8,6), new THREE.MeshStandardMaterial({color:0x4a7a4a}));
-            foliage.position.y=3.5; foliage.castShadow=true; g.add(foliage);
-            g.position.set(x,0,z); return g;
-        }
-        for(let i=0; i<40; i++) {
-            const a=Math.random()*Math.PI*2, r=60+Math.random()*150;
-            const x=Math.cos(a)*r, z=Math.sin(a)*r;
-            if(Math.abs(x)<18 && z>-25 && z<80) continue;
-            scene.add(tree(x,z));
-        }
+        function makeHouse(x, z, c) { const g = new THREE.Group(); const w = new THREE.Mesh(new THREE.BoxGeometry(3.8,2.8,3.8), new THREE.MeshStandardMaterial({color: [0xb0a090,0xa09080,0x9a8a7a][c%3]})); w.position.y = 1.4; w.castShadow = true; w.receiveShadow = true; g.add(w); const roof = new THREE.Mesh(new THREE.ConeGeometry(3.0,1.6,4), new THREE.MeshStandardMaterial({color: 0x7a5a4a})); roof.position.y = 3.0; roof.rotation.y = Math.PI/4; roof.castShadow = true; g.add(roof); g.position.set(x, 0, z); return g; }
+        for(let i=0; i<15; i++) { let x,z; do { const a=Math.random()*Math.PI*2, r=50+Math.random()*160; x=Math.cos(a)*r; z=Math.sin(a)*r; } while(Math.abs(x)<18 && z>-25 && z<70); scene.add(makeHouse(x,z,i)); }
+        function tree(x,z) { const g = new THREE.Group(); const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.6,0.8,2.8), new THREE.MeshStandardMaterial({color: 0x6a5a4a})); trunk.position.y=1.4; trunk.castShadow=true; trunk.receiveShadow=true; g.add(trunk); const foliage = new THREE.Mesh(new THREE.ConeGeometry(2.0,2.8,6), new THREE.MeshStandardMaterial({color:0x4a7a4a})); foliage.position.y=3.5; foliage.castShadow=true; g.add(foliage); g.position.set(x,0,z); return g; }
+        for(let i=0; i<40; i++) { const a=Math.random()*Math.PI*2, r=60+Math.random()*150; const x=Math.cos(a)*r, z=Math.sin(a)*r; if(Math.abs(x)<18 && z>-25 && z<80) continue; scene.add(tree(x,z)); }
 
-        function createBird(skin) {
-            const g = new THREE.Group();
-            const bodyColor = skin.color, size = skin.size;
-            const body = new THREE.Mesh(new THREE.SphereGeometry(0.85 * size), new THREE.MeshStandardMaterial({color: bodyColor}));
-            body.castShadow = true; body.receiveShadow = true; g.add(body);
-            const head = new THREE.Mesh(new THREE.SphereGeometry(0.5 * size), new THREE.MeshStandardMaterial({color: bodyColor}));
-            head.position.set(0, 0.65 * size, 0.75 * size); head.castShadow = true; g.add(head);
-            const beak = new THREE.Mesh(new THREE.ConeGeometry(0.18 * size, 0.45 * size), new THREE.MeshStandardMaterial({color: skin.name === 'Ворон' ? 0x333333 : 0xcc7733}));
-            beak.position.set(0, 0.6 * size, 1.15 * size); beak.rotation.x = 0.2; beak.castShadow = true; g.add(beak);
-            const wingGeo = new THREE.BoxGeometry(0.85 * size, 0.1 * size, 0.55 * size);
-            const wingMat = new THREE.MeshStandardMaterial({color: skin.name === 'Ворон' ? 0x444444 : 0xaa8844});
-            const lw = new THREE.Mesh(wingGeo, wingMat); lw.position.set(-0.9 * size, 0.3 * size, 0); lw.rotation.z = -0.4; lw.castShadow = true; g.add(lw);
-            const rw = new THREE.Mesh(wingGeo, wingMat); rw.position.set(0.9 * size, 0.3 * size, 0); rw.rotation.z = 0.4; rw.castShadow = true; g.add(rw);
-            return { group: g, leftWing: lw, rightWing: rw };
+        function createBird(skin) { 
+            const g = new THREE.Group(); 
+            const bodyColor = skin.color, size = skin.size; 
+            const body = new THREE.Mesh(new THREE.SphereGeometry(0.85 * size), new THREE.MeshStandardMaterial({color: bodyColor, emissive: skin.name === 'Демон' ? 0x330000 : 0x000000, emissiveIntensity: skin.name === 'Демон' ? 0.5 : 0})); 
+            body.castShadow = true; body.receiveShadow = true; g.add(body); 
+            const head = new THREE.Mesh(new THREE.SphereGeometry(0.5 * size), new THREE.MeshStandardMaterial({color: bodyColor})); 
+            head.position.set(0, 0.65 * size, 0.75 * size); head.castShadow = true; g.add(head); 
+            const beak = new THREE.Mesh(new THREE.ConeGeometry(0.18 * size, 0.45 * size), new THREE.MeshStandardMaterial({color: skin.name === 'Ворон' || skin.name === 'Демон' ? 0x333333 : 0xcc7733})); 
+            beak.position.set(0, 0.6 * size, 1.15 * size); beak.rotation.x = 0.2; beak.castShadow = true; g.add(beak); 
+            const wingGeo = new THREE.BoxGeometry(0.85 * size, 0.1 * size, 0.55 * size); 
+            const wingMat = new THREE.MeshStandardMaterial({color: skin.name === 'Ворон' || skin.name === 'Демон' ? 0x444444 : 0xaa8844}); 
+            const lw = new THREE.Mesh(wingGeo, wingMat); lw.position.set(-0.9 * size, 0.3 * size, 0); lw.rotation.z = -0.4; lw.castShadow = true; g.add(lw); 
+            const rw = new THREE.Mesh(wingGeo, wingMat); rw.position.set(0.9 * size, 0.3 * size, 0); rw.rotation.z = 0.4; rw.castShadow = true; g.add(rw); 
+            return { group: g, leftWing: lw, rightWing: rw }; 
         }
-        
-        function updatePreviewBird() {
-            if (bird) scene.remove(bird);
-            const skin = baseSkins[selectedSkinIndex];
-            const obj = createBird(skin);
-            bird = obj.group; leftWing = obj.leftWing; rightWing = obj.rightWing;
-            bird.position.set(0, 12, 25); bird.castShadow = true;
-            scene.add(bird);
-            document.getElementById('bird-name').textContent = skin.name;
-        }
-        
-        let birdObj = createBird(baseSkins[0]);
-        bird = birdObj.group; leftWing = birdObj.leftWing; rightWing = birdObj.rightWing;
-        bird.position.set(0, 12, 25); bird.castShadow = true;
-        scene.add(bird);
+        function updatePreviewBird() { if (bird) scene.remove(bird); const skin = baseSkins[selectedSkinIndex]; const obj = createBird(skin); bird = obj.group; leftWing = obj.leftWing; rightWing = obj.rightWing; bird.position.set(0, 12, 25); bird.castShadow = true; scene.add(bird); document.getElementById('bird-name').textContent = skin.name; }
+        let birdObj = createBird(baseSkins[0]); bird = birdObj.group; leftWing = birdObj.leftWing; rightWing = birdObj.rightWing; bird.position.set(0, 12, 25); bird.castShadow = true; scene.add(bird);
 
-        let globalAnger = 0;
-        const maxAnger = 100;
-        const entities = [], hunters = [], bullets = [], droppings = [];
-        let poopCooldown = 0, caged = false, cageEndTime = 0;
-        const cageGroup = new THREE.Group();
-        
-        function updateAngerUI() {
-            const p = (globalAnger/maxAnger)*100;
-            document.getElementById('anger-fill').style.width = p+'%';
-            document.getElementById('anger-value').textContent = Math.round(p)+'%';
-            const hs = document.getElementById('hunter-status');
-            if(globalAnger >= 10) { hs.innerHTML = '🏹 Охотники: 🔴'; hs.style.color = '#ff8888'; }
-            else { hs.innerHTML = '🏹 Охотники: 🟢'; hs.style.color = '#ccaa88'; }
-        }
-        
-        function respawnPerson(person) {
-            let x, z;
-            do {
-                const a = Math.random() * Math.PI * 2;
-                const r = 50 + Math.random() * 180;
-                x = Math.cos(a) * r;
-                z = Math.sin(a) * r;
-            } while (Math.abs(x) < 20 && z > -30 && z < 80);
-            person.position.set(x, 0, z);
-            person.userData.health = 5;
-            person.userData.anger = 0;
-            person.userData.target = null;
-            if (person.userData.healthBar) {
-                person.userData.healthBar.fill.style.width = '100%';
-            }
-            showMessage(`🔄 ${person.userData.type === 'hunter' ? 'Охотник' : 'Житель'} возродился!`);
-        }
-        
-        function createPerson(x, z, type='villager') {
-            const g = new THREE.Group();
-            const skin = type==='hunter' ? 0x6a7a8a : 0xccaa99;
-            const body = new THREE.Mesh(new THREE.CylinderGeometry(0.45,0.45,1.7), new THREE.MeshStandardMaterial({color:skin}));
-            body.position.y=0.85; body.castShadow=true; body.receiveShadow=true; g.add(body);
-            const head = new THREE.Mesh(new THREE.SphereGeometry(0.32), new THREE.MeshStandardMaterial({color:skin}));
-            head.position.y=1.8; head.castShadow=true; g.add(head);
-            
-            const div = document.createElement('div');
-            div.style.cssText = 'color:#ddc;font-size:11px;font-weight:bold;background:rgba(30,20,20,0.6);padding:2px 5px;border-radius:8px;';
-            div.textContent = type==='hunter'?'Охотник':'Житель';
-            const label = new CSS2DObject(div); label.position.set(0,2.8,0); g.add(label);
-            
-            // Шкала здоровья
-            const healthDiv = document.createElement('div');
-            healthDiv.className = 'health-bar';
-            healthDiv.innerHTML = '<div class="health-fill" style="width:100%"></div>';
-            const healthLabel = new CSS2DObject(healthDiv);
-            healthLabel.position.set(0, 2.2, 0);
-            g.add(healthLabel);
-            
-            if(type==='hunter') {
-                g.add(new THREE.Mesh(new THREE.ConeGeometry(0.45,0.45), new THREE.MeshStandardMaterial({color:0x4a3a2a}))).position.y=2.1;
-                const gun = new THREE.Mesh(new THREE.BoxGeometry(0.12,0.12,1.0), new THREE.MeshStandardMaterial({color:0x444}));
-                gun.position.set(0.45,1.1,0.35); gun.rotation.z=0.3; g.add(gun);
-            }
-            g.position.set(x,0,z);
-            g.userData = {
-                type, health: 5, maxHealth: 5, anger: 0, labelDiv: div,
-                healthBar: { fill: healthDiv.children[0] },
-                speed: type==='hunter'?0.022:0.018, target: null, lastShot: 0
-            };
-            return g;
-        }
-        
-        for(let i=0; i<10; i++) {
-            let x,z;
-            do { const a=Math.random()*Math.PI*2, r=45+Math.random()*170; x=Math.cos(a)*r; z=Math.sin(a)*r; } while(Math.abs(x)<20 && z>-30 && z<80);
-            scene.add(createPerson(x,z,'villager')); entities.push(scene.children[scene.children.length-1]);
-        }
-        
-        function spawnHunter(x,z) {
-            const h = createPerson(x,z,'hunter');
-            scene.add(h); entities.push(h); hunters.push(h);
-            document.getElementById('hunter-count').textContent = hunters.length;
-        }
+        let globalAnger = 0; const maxAnger = 100; const entities = [], hunters = [], bullets = [], droppings = []; let poopCooldown = 0, caged = false, cageEndTime = 0; const cageGroup = new THREE.Group();
+        function updateAngerUI() { const p = (globalAnger/maxAnger)*100; document.getElementById('anger-fill').style.width = p+'%'; document.getElementById('anger-value').textContent = Math.round(p)+'%'; const hs = document.getElementById('hunter-status'); if(globalAnger >= 10) { hs.innerHTML = '🏹 Охотники: 🔴'; hs.style.color = '#ff8888'; } else { hs.innerHTML = '🏹 Охотники: 🟢'; hs.style.color = '#ccaa88'; } }
+        function respawnPerson(person) { let x, z; do { const a = Math.random() * Math.PI * 2; const r = 50 + Math.random() * 180; x = Math.cos(a) * r; z = Math.sin(a) * r; } while (Math.abs(x) < 20 && z > -30 && z < 80); person.position.set(x, 0, z); person.userData.health = 5; person.userData.anger = 0; person.userData.target = null; if (person.userData.healthBar) person.userData.healthBar.fill.style.width = '100%'; showMessage(`🔄 ${person.userData.type === 'hunter' ? 'Охотник' : 'Житель'} возродился!`); }
+        function createPerson(x, z, type='villager') { const g = new THREE.Group(); const skin = type==='hunter' ? 0x6a7a8a : 0xccaa99; const body = new THREE.Mesh(new THREE.CylinderGeometry(0.45,0.45,1.7), new THREE.MeshStandardMaterial({color:skin})); body.position.y=0.85; body.castShadow=true; body.receiveShadow=true; g.add(body); const head = new THREE.Mesh(new THREE.SphereGeometry(0.32), new THREE.MeshStandardMaterial({color:skin})); head.position.y=1.8; head.castShadow=true; g.add(head); const div = document.createElement('div'); div.style.cssText = 'color:#ddc;font-size:11px;font-weight:bold;background:rgba(30,20,20,0.6);padding:2px 5px;border-radius:8px;'; div.textContent = type==='hunter'?'Охотник':'Житель'; const label = new CSS2DObject(div); label.position.set(0,2.8,0); g.add(label); const healthDiv = document.createElement('div'); healthDiv.className = 'health-bar'; healthDiv.innerHTML = '<div class="health-fill" style="width:100%"></div>'; const healthLabel = new CSS2DObject(healthDiv); healthLabel.position.set(0, 2.2, 0); g.add(healthLabel); if(type==='hunter') { g.add(new THREE.Mesh(new THREE.ConeGeometry(0.45,0.45), new THREE.MeshStandardMaterial({color:0x4a3a2a}))).position.y=2.1; const gun = new THREE.Mesh(new THREE.BoxGeometry(0.12,0.12,1.0), new THREE.MeshStandardMaterial({color:0x444})); gun.position.set(0.45,1.1,0.35); gun.rotation.z=0.3; g.add(gun); } g.position.set(x,0,z); g.userData = { type, health: 5, maxHealth: 5, anger: 0, labelDiv: div, healthBar: { fill: healthDiv.children[0] }, speed: type==='hunter'?0.022:0.018, target: null, lastShot: 0 }; return g; }
+        for(let i=0; i<10; i++) { let x,z; do { const a=Math.random()*Math.PI*2, r=45+Math.random()*170; x=Math.cos(a)*r; z=Math.sin(a)*r; } while(Math.abs(x)<20 && z>-30 && z<80); scene.add(createPerson(x,z,'villager')); entities.push(scene.children[scene.children.length-1]); }
+        function spawnHunter(x,z) { const h = createPerson(x,z,'hunter'); scene.add(h); entities.push(h); hunters.push(h); document.getElementById('hunter-count').textContent = hunters.length; }
         spawnHunter(-40,-30); spawnHunter(45,20);
+        (function(){ const m = new THREE.MeshStandardMaterial({color:0x9a9a9a}); for(let i=0;i<4;i++){ const b=new THREE.Mesh(new THREE.BoxGeometry(0.2,2.8,0.2),m); b.position.set(i%2?-1.5:1.5,1.4,i<2?-1.5:1.5); b.castShadow=true; cageGroup.add(b); } cageGroup.visible=false; scene.add(cageGroup); })();
+        function captureBird() { if(caged) return; caged = true; cageEndTime = performance.now() + 10000; cageGroup.position.copy(bird.position); cageGroup.position.y = 0.5; cageGroup.visible = true; document.getElementById('cage-timer').style.display = 'block'; document.getElementById('cage-alert').innerHTML = '🔒'; }
         
-        (function(){
-            const m = new THREE.MeshStandardMaterial({color:0x9a9a9a});
-            for(let i=0;i<4;i++){ const b=new THREE.Mesh(new THREE.BoxGeometry(0.2,2.8,0.2),m); b.position.set(i%2?-1.5:1.5,1.4,i<2?-1.5:1.5); b.castShadow=true; cageGroup.add(b); }
-            cageGroup.visible=false; scene.add(cageGroup);
-        })();
-        
-        function captureBird() {
-            if(caged) return;
-            caged = true; cageEndTime = performance.now() + 10000;
-            cageGroup.position.copy(bird.position); cageGroup.position.y = 0.5;
-            cageGroup.visible = true;
-            document.getElementById('cage-timer').style.display = 'block';
-            document.getElementById('cage-alert').innerHTML = '🔒';
+        function useAbility() { 
+            if (!gameStarted || caged || abilityCooldown > 0) return; 
+            const skin = baseSkins[selectedSkinIndex]; 
+            abilityCooldown = 10; 
+            playSound('ability'); 
+            switch(skin.name) { 
+                case 'Воробей': case 'Колибри': bird.position.y += 10; showMessage('✨ Рывок вверх!'); break; 
+                case 'Орёл': entities.forEach(e => { if(e.userData.type === 'hunter') { e.userData.anger = 0; e.userData.target = null; } }); showMessage('🦅 Крик!'); break; 
+                case 'Голубь': globalAnger = 0; entities.forEach(e => { e.userData.anger = 0; e.userData.target = null; }); updateAngerUI(); showMessage('🕊️ Мир!'); break; 
+                case 'Ворон': bird.position.x = (Math.random()-0.5)*200; bird.position.z = (Math.random()-0.5)*200; showMessage('🌑 Телепорт!'); break; 
+                case 'Феникс': globalAnger = 0; updateAngerUI(); showMessage('🔥 Возрождение!'); break; 
+                case 'Сова': nightVisionActive = true; setTimeout(() => nightVisionActive = false, 5000); showMessage('🦉 Ночное зрение!'); break; 
+                case 'Дракон': entities.forEach(e => { if (e.position.distanceTo(bird.position) < 30 && e.userData.type !== 'animal') { e.userData.health = Math.max(0, e.userData.health - 2); if (e.userData.health <= 0) respawnPerson(e); } }); showMessage('🐉 Огненное дыхание!'); break; 
+                case 'Птеродактиль': entities.forEach(e => { if (e.userData.type === 'hunter') { e.userData.anger = 0; e.userData.target = null; e.userData.lastShot = performance.now() + 5000; } }); showMessage('🦇 Крик ужаса! Охотники в панике!'); break; 
+                case 'Ангел': gameData.coins += 50; updateCoinsDisplay(); showMessage('👼 Исцеление! +50🪙'); break; 
+                case 'Демон': demonMode = true; setTimeout(() => demonMode = false, 8000); showMessage('👿 Проклятие! Урон от помёта удвоен на 8с!'); break; 
+                case 'Кибер-птица': entities.forEach(e => { if (e.userData.type === 'hunter') { e.userData.lastShot = performance.now() + 8000; } }); showMessage('🤖 ЭМИ! Охотники не могут стрелять 8с!'); break; 
+                default: showMessage(`✨ ${skin.ability}!`); 
+            } 
         }
         
-        function useAbility() {
-            if (!gameStarted || caged || abilityCooldown > 0) return;
-            const skin = baseSkins[selectedSkinIndex];
-            abilityCooldown = 10;
-            playSound('ability');
-            
-            switch(skin.name) {
-                case 'Воробей': case 'Колибри': bird.position.y += 10; showMessage('✨ Рывок вверх!'); break;
-                case 'Орёл': entities.forEach(e => { if(e.userData.type === 'hunter') { e.userData.anger = 0; e.userData.target = null; } }); showMessage('🦅 Крик!'); break;
-                case 'Голубь': globalAnger = 0; entities.forEach(e => { e.userData.anger = 0; e.userData.target = null; }); updateAngerUI(); showMessage('🕊️ Мир!'); break;
-                case 'Ворон': bird.position.x = (Math.random()-0.5)*200; bird.position.z = (Math.random()-0.5)*200; showMessage('🌑 Телепорт!'); break;
-                case 'Феникс': globalAnger = 0; updateAngerUI(); showMessage('🔥 Возрождение!'); break;
-                case 'Сова':
-                    nightVisionActive = true;
-                    setTimeout(() => nightVisionActive = false, 5000);
-                    showMessage('🦉 Ночное зрение активировано!');
-                    break;
-                default: showMessage(`✨ ${skin.ability}!`);
-            }
+        function dropPoop() { 
+            if(caged || !gameStarted || poopCooldown > 0) return; 
+            poopCooldown = 1.0; 
+            playSound('poop'); 
+            const poop = new THREE.Mesh(new THREE.SphereGeometry(0.35), new THREE.MeshStandardMaterial({color: demonMode ? 0x882222 : 0x7a6a5a, emissive: demonMode ? 0x440000 : 0x000000, emissiveIntensity: demonMode ? 0.8 : 0})); 
+            poop.position.copy(bird.position); poop.position.y -= 0.7; 
+            poop.userData = {velocity: new THREE.Vector3(0, -2.5, 0), birthTime: performance.now(), lifetime: 10000, demonic: demonMode}; 
+            poop.castShadow = true; 
+            scene.add(poop); droppings.push(poop); 
+            entities.forEach(e => { 
+                if(e.userData.type !== 'animal' && poop.position.distanceTo(e.position) < 5) { 
+                    const damage = demonMode ? 2 : 1; 
+                    e.userData.health -= damage; 
+                    const healthPercent = (e.userData.health / e.userData.maxHealth) * 100; 
+                    if (e.userData.healthBar) e.userData.healthBar.fill.style.width = healthPercent + '%'; 
+                    e.userData.anger = Math.min(100, e.userData.anger + (demonMode ? 40 : 25)); 
+                    globalAnger = Math.min(maxAnger, globalAnger + (demonMode ? 15 : 8)); 
+                    updateAngerUI(); 
+                    e.userData.labelDiv.textContent = '😠'; 
+                    e.userData.target = bird.position.clone(); 
+                    gameData.coins += demonMode ? 10 : 5; 
+                    updateCoinsDisplay(); 
+                    playSound('coin'); 
+                    showMessage(`💩 ${demonMode ? '💀 ДЕМОНИЧЕСКИЙ' : ''} -${damage} HP! +${demonMode ? 10 : 5}🪙`); 
+                    if (e.userData.health <= 0) respawnPerson(e); 
+                } 
+            }); 
         }
         
-        function dropPoop() {
-            if(caged || !gameStarted || poopCooldown > 0) return;
-            poopCooldown = 1.0;
-            playSound('poop');
-            const poop = new THREE.Mesh(new THREE.SphereGeometry(0.35), new THREE.MeshStandardMaterial({color:0x7a6a5a}));
-            poop.position.copy(bird.position); poop.position.y -= 0.7;
-            poop.userData = {velocity: new THREE.Vector3(0, -2.5, 0), birthTime: performance.now(), lifetime: 10000};
-            poop.castShadow = true;
-            scene.add(poop); droppings.push(poop);
-            entities.forEach(e => {
-                if(e.userData.type !== 'animal' && poop.position.distanceTo(e.position) < 5) {
-                    e.userData.health--;
-                    const healthPercent = (e.userData.health / e.userData.maxHealth) * 100;
-                    if (e.userData.healthBar) e.userData.healthBar.fill.style.width = healthPercent + '%';
-                    
-                    e.userData.anger = Math.min(100, e.userData.anger + 25);
-                    globalAnger = Math.min(maxAnger, globalAnger + 8);
-                    updateAngerUI();
-                    e.userData.labelDiv.textContent = '😠';
-                    e.userData.target = bird.position.clone();
-                    gameData.coins += 5;
-                    updateCoinsDisplay();
-                    playSound('coin');
-                    showMessage(`💩 -${5 - e.userData.health} HP! +5🪙`);
-                    
-                    if (e.userData.health <= 0) {
-                        respawnPerson(e);
-                    }
-                }
-            });
-        }
+        function exitToMenu() { if (!gameStarted) return; gameStarted = false; caged = false; nightVisionActive = false; demonMode = false; cageGroup.visible = false; document.getElementById('cage-timer').style.display = 'none'; document.getElementById('start-menu').style.display = 'flex'; document.getElementById('exit-btn').classList.remove('active'); document.getElementById('mobile-controls').classList.remove('active'); document.getElementById('height-controls').classList.remove('active'); document.getElementById('camera-controls').classList.remove('active'); saveGame(); renderSkinGrid(); updateCoinsDisplay(); bird.position.set(0, 12, 25); }
+        function showMessage(t) { const el = document.getElementById('message-popup'); el.style.opacity = 1; el.textContent = t; setTimeout(() => el.style.opacity = 0, 1500); }
         
-        function exitToMenu() {
-            if (!gameStarted) return;
-            gameStarted = false; caged = false; nightVisionActive = false;
-            cageGroup.visible = false;
-            document.getElementById('cage-timer').style.display = 'none';
-            document.getElementById('start-menu').style.display = 'flex';
-            document.getElementById('exit-btn').classList.remove('active');
-            document.getElementById('mobile-controls').classList.remove('active');
-            document.getElementById('height-controls').classList.remove('active');
-            document.getElementById('camera-controls').classList.remove('active');
-            saveGame(); renderSkinGrid(); updateCoinsDisplay();
-            bird.position.set(0, 12, 25);
-        }
-        
-        function showMessage(t) {
-            const el = document.getElementById('message-popup');
-            el.style.opacity = 1; el.textContent = t;
-            setTimeout(() => el.style.opacity = 0, 1500);
-        }
-        
-        const keys = { w:false, q:false, e:false, space:false, shift:false, up:false, down:false, camLeft:false, camRight:false };
-        let mouseX = 0, mouseY = 0.3;
-        
-        document.querySelectorAll('.mobile-btn, .height-btn, .camera-btn').forEach(btn => {
-            const action = btn.dataset.action;
-            btn.addEventListener('touchstart', (e) => { e.preventDefault(); handleAction(action, true); });
-            btn.addEventListener('touchend', (e) => { e.preventDefault(); handleAction(action, false); });
-            btn.addEventListener('mousedown', (e) => { e.preventDefault(); handleAction(action, true); });
-            btn.addEventListener('mouseup', (e) => { e.preventDefault(); handleAction(action, false); });
-        });
-        
-        function handleAction(action, state) {
-            if(!gameStarted) return;
-            switch(action) {
-                case 'forward': keys.w = state; break;
-                case 'up': keys.up = state; break;
-                case 'down': keys.down = state; break;
-                case 'cam-left': keys.camLeft = state; break;
-                case 'cam-right': keys.camRight = state; break;
-                case 'poop': if(state) dropPoop(); break;
-                case 'ability': if(state) useAbility(); break;
-                case 'exit': if(state) exitToMenu(); break;
-            }
-        }
-        
-        window.addEventListener('keydown', e => {
-            if (!gameStarted) return;
-            if (e.code === 'KeyL') { exitToMenu(); e.preventDefault(); return; }
-            if (e.code === 'KeyR') { useAbility(); e.preventDefault(); return; }
-            if (controlMode !== 'pc') return;
-            switch(e.code) { case 'KeyW': keys.w=true; break; case 'KeyQ': keys.q=true; break; case 'KeyE': keys.e=true; break; case 'Space': keys.space=true; break; case 'ShiftLeft': case 'ShiftRight': keys.shift=true; break; case 'KeyF': dropPoop(); break; }
-            e.preventDefault();
-        });
-        window.addEventListener('keyup', e => {
-            if (!gameStarted || controlMode !== 'pc') return;
-            switch(e.code) { case 'KeyW': keys.w=false; break; case 'KeyQ': keys.q=false; break; case 'KeyE': keys.e=false; break; case 'Space': keys.space=false; break; case 'ShiftLeft': case 'ShiftRight': keys.shift=false; break; }
-        });
-        
-        document.addEventListener('mousemove', e => {
-            if(!gameStarted || controlMode !== 'pc' || !document.pointerLockElement) return;
-            mouseX += e.movementX*0.002;
-            mouseY = Math.max(-0.5, Math.min(1.0, mouseY + e.movementY*0.002));
-        });
-        
+        const keys = { w:false, q:false, e:false, space:false, shift:false, up:false, down:false, camLeft:false, camRight:false }; let mouseX = 0, mouseY = 0.3;
+        document.querySelectorAll('.mobile-btn, .height-btn, .camera-btn').forEach(btn => { const action = btn.dataset.action; btn.addEventListener('touchstart', (e) => { e.preventDefault(); handleAction(action, true); }); btn.addEventListener('touchend', (e) => { e.preventDefault(); handleAction(action, false); }); btn.addEventListener('mousedown', (e) => { e.preventDefault(); handleAction(action, true); }); btn.addEventListener('mouseup', (e) => { e.preventDefault(); handleAction(action, false); }); });
+        function handleAction(action, state) { if(!gameStarted) return; switch(action) { case 'forward': keys.w = state; break; case 'up': keys.up = state; break; case 'down': keys.down = state; break; case 'cam-left': keys.camLeft = state; break; case 'cam-right': keys.camRight = state; break; case 'poop': if(state) dropPoop(); break; case 'ability': if(state) useAbility(); break; case 'exit': if(state) exitToMenu(); break; } }
+        window.addEventListener('keydown', e => { if (!gameStarted) return; if (e.code === 'KeyL') { exitToMenu(); e.preventDefault(); return; } if (e.code === 'KeyR') { useAbility(); e.preventDefault(); return; } if (controlMode !== 'pc') return; switch(e.code) { case 'KeyW': keys.w=true; break; case 'KeyQ': keys.q=true; break; case 'KeyE': keys.e=true; break; case 'Space': keys.space=true; break; case 'ShiftLeft': case 'ShiftRight': keys.shift=true; break; case 'KeyF': dropPoop(); break; } e.preventDefault(); });
+        window.addEventListener('keyup', e => { if (!gameStarted || controlMode !== 'pc') return; switch(e.code) { case 'KeyW': keys.w=false; break; case 'KeyQ': keys.q=false; break; case 'KeyE': keys.e=false; break; case 'Space': keys.space=false; break; case 'ShiftLeft': case 'ShiftRight': keys.shift=false; break; } });
+        document.addEventListener('mousemove', e => { if(!gameStarted || controlMode !== 'pc' || !document.pointerLockElement) return; mouseX += e.movementX*0.002; mouseY -= e.movementY*0.002; mouseY = Math.max(-0.5, Math.min(1.0, mouseY)); });
         renderer.domElement.addEventListener('click', () => { if(gameStarted && controlMode === 'pc') renderer.domElement.requestPointerLock(); });
+        document.getElementById('start-game-btn').addEventListener('click', () => { document.getElementById('start-menu').style.display = 'none'; gameStarted = true; updatePreviewBird(); bird.position.set(0, 12, 25); document.getElementById('exit-btn').classList.add('active'); if(controlMode === 'mobile') { document.getElementById('mobile-controls').classList.add('active'); document.getElementById('height-controls').classList.add('active'); document.getElementById('camera-controls').classList.add('active'); } else renderer.domElement.requestPointerLock(); showMessage('🦅 Взлетаем!'); initAudio(); });
         
-        document.getElementById('start-game-btn').addEventListener('click', () => {
-            document.getElementById('start-menu').style.display = 'none';
-            gameStarted = true;
-            updatePreviewBird();
-            bird.position.set(0, 12, 25);
-            document.getElementById('exit-btn').classList.add('active');
-            if(controlMode === 'mobile') {
-                document.getElementById('mobile-controls').classList.add('active');
-                document.getElementById('height-controls').classList.add('active');
-                document.getElementById('camera-controls').classList.add('active');
-            } else renderer.domElement.requestPointerLock();
-            showMessage('🦅 Взлетаем!');
-            initAudio();
-        });
-        
-        let wingFlap = 0, lastTime = performance.now();
-        const camDir = new THREE.Vector3();
-        
-        function animate(time) {
-            requestAnimationFrame(animate);
-            const delta = Math.min(0.1, (time - lastTime)/1000);
-            lastTime = time;
-            
-            dayTime = (Math.sin(time * 0.0001) + 1) * 0.5;
-            const dayFactor = dayTime;
-            const nightFactor = 1 - dayTime;
-            
-            // Ночное зрение совы
-            const isOwl = baseSkins[selectedSkinIndex].name === 'Сова';
-            const brightness = (nightVisionActive && isOwl) ? 1.0 : (0.3 + dayFactor * 0.4);
-            
-            scene.background.setHSL(0.58, 0.5, 0.2 + brightness * 0.4);
-            scene.fog.color.copy(scene.background);
-            
-            ambientLight.intensity = (nightVisionActive && isOwl) ? 0.8 : (0.3 + dayFactor * 0.4);
-            sunLight.intensity = dayFactor * 1.5;
-            sunLight.color.setHSL(0.1, 0.8, 0.5 + dayFactor * 0.3);
-            moonLight.intensity = (nightVisionActive && isOwl) ? 0.2 : (nightFactor * 0.5);
-            
-            const timeEl = document.getElementById('time-indicator');
-            if (dayFactor > 0.7) timeEl.innerHTML = '🌞 День';
-            else if (dayFactor > 0.3) timeEl.innerHTML = '🌅 Рассвет/Закат';
-            else timeEl.innerHTML = '🌙 Ночь';
-            if (nightVisionActive && isOwl) timeEl.innerHTML += ' 🦉';
-            
-            if(!gameStarted) {
-                bird.position.y = 12 + Math.sin(time*0.003)*1.5;
-                wingFlap += 0.2;
-                leftWing.rotation.z = -0.4 + Math.sin(wingFlap)*0.3;
-                rightWing.rotation.z = 0.4 - Math.sin(wingFlap)*0.3;
-                camera.position.x = 30*Math.sin(time*0.0008);
-                camera.position.z = 30*Math.cos(time*0.0008);
-                camera.position.y = 18;
-                camera.lookAt(bird.position);
-                renderer.render(scene, camera);
-                cssRenderer.render(scene, camera);
-                return;
-            }
-            
-            if(poopCooldown > 0) { poopCooldown = Math.max(0, poopCooldown - delta); }
-            if(abilityCooldown > 0) { abilityCooldown = Math.max(0, abilityCooldown - delta); }
-            document.getElementById('ability-status').textContent = abilityCooldown>0 ? `✨ ${abilityCooldown.toFixed(1)}с` : '✨ Готов';
-            
-            if(caged) {
-                const remaining = Math.max(0, cageEndTime - performance.now());
-                document.getElementById('cage-timer').textContent = Math.ceil(remaining/1000);
-                if(performance.now() > cageEndTime) {
-                    caged = false; cageGroup.visible = false;
-                    document.getElementById('cage-timer').style.display = 'none';
-                    document.getElementById('cage-alert').innerHTML = '✅';
-                } else bird.position.copy(cageGroup.position).add(new THREE.Vector3(0,1.5,0));
-            }
-            
-            if(!caged) {
-                camera.getWorldDirection(camDir); camDir.y = 0; camDir.normalize();
-                if(keys.camLeft) mouseX -= 0.025;
-                if(keys.camRight) mouseX += 0.025;
-                const skin = baseSkins[selectedSkinIndex], spd = skin.speed, agi = skin.agility;
-                if(controlMode === 'mobile') {
-                    if(keys.w) { bird.position.x += camDir.x*0.4*spd; bird.position.z += camDir.z*0.4*spd; }
-                    if(keys.up) bird.position.y += 0.25*agi;
-                    if(keys.down) bird.position.y -= 0.25*agi;
-                } else {
-                    if(keys.w) { bird.position.x += camDir.x*0.5*spd; bird.position.z += camDir.z*0.5*spd; }
-                    if(keys.q) mouseX -= 0.025*agi;
-                    if(keys.e) mouseX += 0.025*agi;
-                    if(keys.space) bird.position.y += 0.3*agi;
-                    if(keys.shift) bird.position.y -= 0.3*agi;
-                }
-                bird.position.y = Math.max(4, Math.min(40, bird.position.y));
-                ['x','z'].forEach(ax => { if(Math.abs(bird.position[ax]) > boundary-6) bird.position[ax] = Math.sign(bird.position[ax])*(boundary-6); });
-                
-                const offset = new THREE.Vector3(-9, 5, 12);
-                offset.applyEuler(new THREE.Euler(mouseY, mouseX, 0, 'YXZ'));
-                camera.position.copy(bird.position).add(offset);
-                camera.lookAt(bird.position.clone().add(new THREE.Vector3(0, 2, 0)));
-                bird.rotation.y = mouseX;
-            }
-            
-            wingFlap += 0.25;
-            leftWing.rotation.z = -0.4 + Math.sin(wingFlap)*0.4;
-            rightWing.rotation.z = 0.4 - Math.sin(wingFlap)*0.4;
-            
-            globalAnger = Math.max(0, globalAnger - delta*0.5);
-            updateAngerUI();
-            
-            bullets.forEach((b,i) => {
-                b.position.add(b.userData.velocity.clone().multiplyScalar(delta*60));
-                b.userData.velocity.y -= delta * 2;
-                const age = performance.now() - (b.userData.birthTime || 0);
-                if (!b.userData.birthTime) b.userData.birthTime = performance.now();
-                if (b.position.y < 0.5 || age > 10000) { scene.remove(b); bullets.splice(i,1); }
-                else if (b.position.distanceTo(bird.position) < 4.5 && !caged) { captureBird(); scene.remove(b); bullets.splice(i,1); }
-            });
-            
-            droppings.forEach((d,i) => {
-                d.position.y += d.userData.velocity.y * delta * 60;
-                d.userData.velocity.y -= delta * 8;
-                entities.forEach(e => {
-                    if(e.userData.type !== 'animal' && d.position.distanceTo(e.position) < 3.5) {
-                        e.userData.health--;
-                        const healthPercent = (e.userData.health / e.userData.maxHealth) * 100;
-                        if (e.userData.healthBar) e.userData.healthBar.fill.style.width = healthPercent + '%';
-                        
-                        e.userData.anger = Math.min(100, e.userData.anger + 25);
-                        globalAnger = Math.min(maxAnger, globalAnger + 8);
-                        updateAngerUI();
-                        e.userData.labelDiv.textContent = '😠';
-                        e.userData.target = bird.position.clone();
-                        gameData.coins += 5; updateCoinsDisplay(); playSound('coin');
-                        showMessage(`💩 -${5 - e.userData.health} HP! +5🪙`);
-                        
-                        if (e.userData.health <= 0) respawnPerson(e);
-                        scene.remove(d); droppings.splice(i,1);
-                    }
-                });
-                if(d.position.y < 0.3 || performance.now() - d.userData.birthTime > d.userData.lifetime) {
-                    scene.remove(d); droppings.splice(i,1);
-                }
-            });
-            
-            entities.forEach(e => {
-                if(!e.parent) return;
-                const d = e.userData;
-                d.anger = Math.max(0, d.anger - delta*2);
-                if(d.anger > 20) d.labelDiv.textContent = '😠';
-                else d.labelDiv.textContent = d.type==='hunter'?'Охотник':'Житель';
-                if(d.type !== 'animal' && (d.anger > 15 || globalAnger > 10)) d.target = bird.position.clone();
-                if(d.target) {
-                    const dir = new THREE.Vector3().subVectors(d.target, e.position);
-                    if(dir.length() < 3.0) { if(d.type==='hunter' && !caged && globalAnger >= 10) captureBird(); d.target = null; }
-                    else { dir.normalize(); e.position.x += dir.x * d.speed * delta * 60; e.position.z += dir.z * d.speed * delta * 60; }
-                } else if(Math.random() < delta * 0.3) d.target = new THREE.Vector3(e.position.x+(Math.random()-0.5)*12, 0, e.position.z+(Math.random()-0.5)*12);
-                
-                if(d.type === 'hunter' && !caged && globalAnger >= 10) {
-                    if(e.position.distanceTo(bird.position) < 210 && performance.now() - d.lastShot > 15000) {
-                        d.lastShot = performance.now(); playSound('shoot');
-                        const bullet = new THREE.Mesh(new THREE.SphereGeometry(0.5), new THREE.MeshStandardMaterial({color:0xffaa00, emissive:0xff4400, emissiveIntensity:1.2}));
-                        bullet.position.copy(e.position).add(new THREE.Vector3(0,1.5,0));
-                        bullet.userData = {velocity: new THREE.Vector3().subVectors(bird.position, e.position).normalize().multiplyScalar(0.8), birthTime: performance.now()};
-                        bullet.castShadow = true;
-                        scene.add(bullet); bullets.push(bullet);
-                        showMessage('🔫 Выстрел!');
-                    }
-                }
-            });
-            
-            renderer.render(scene, camera);
-            cssRenderer.render(scene, camera);
+        let wingFlap = 0, lastTime = performance.now(); const camDir = new THREE.Vector3();
+        function animate(time) { requestAnimationFrame(animate); const delta = Math.min(0.1, (time - lastTime)/1000); lastTime = time;
+            dayTime = (Math.sin(time * 0.0001) + 1) * 0.5; const dayFactor = dayTime; const nightFactor = 1 - dayTime;
+            const isOwl = baseSkins[selectedSkinIndex].name === 'Сова'; const brightness = (nightVisionActive && isOwl) ? 1.0 : (0.3 + dayFactor * 0.4);
+            scene.background.setHSL(0.58, 0.5, 0.2 + brightness * 0.4); scene.fog.color.copy(scene.background);
+            ambientLight.intensity = (nightVisionActive && isOwl) ? 0.8 : (0.3 + dayFactor * 0.4); sunLight.intensity = dayFactor * 1.5; sunLight.color.setHSL(0.1, 0.8, 0.5 + dayFactor * 0.3); moonLight.intensity = (nightVisionActive && isOwl) ? 0.2 : (nightFactor * 0.5);
+            const timeEl = document.getElementById('time-indicator'); if (dayFactor > 0.7) timeEl.innerHTML = '🌞 День'; else if (dayFactor > 0.3) timeEl.innerHTML = '🌅 Рассвет/Закат'; else timeEl.innerHTML = '🌙 Ночь'; if (nightVisionActive && isOwl) timeEl.innerHTML += ' 🦉';
+            if(!gameStarted) { bird.position.y = 12 + Math.sin(time*0.003)*1.5; wingFlap += 0.2; leftWing.rotation.z = -0.4 + Math.sin(wingFlap)*0.3; rightWing.rotation.z = 0.4 - Math.sin(wingFlap)*0.3; camera.position.x = 30*Math.sin(time*0.0008); camera.position.z = 30*Math.cos(time*0.0008); camera.position.y = 18; camera.lookAt(bird.position); renderer.render(scene, camera); cssRenderer.render(scene, camera); return; }
+            if(poopCooldown > 0) { poopCooldown = Math.max(0, poopCooldown - delta); } if(abilityCooldown > 0) { abilityCooldown = Math.max(0, abilityCooldown - delta); } document.getElementById('ability-status').textContent = abilityCooldown>0 ? `✨ ${abilityCooldown.toFixed(1)}с` : '✨ Готов';
+            if(caged) { const remaining = Math.max(0, cageEndTime - performance.now()); document.getElementById('cage-timer').textContent = Math.ceil(remaining/1000); if(performance.now() > cageEndTime) { caged = false; cageGroup.visible = false; document.getElementById('cage-timer').style.display = 'none'; document.getElementById('cage-alert').innerHTML = '✅'; } else bird.position.copy(cageGroup.position).add(new THREE.Vector3(0,1.5,0)); }
+            if(!caged) { camera.getWorldDirection(camDir); camDir.y = 0; camDir.normalize(); if(keys.camLeft) mouseX -= 0.025; if(keys.camRight) mouseX += 0.025; const skin = baseSkins[selectedSkinIndex], spd = skin.speed, agi = skin.agility; if(controlMode === 'mobile') { if(keys.w) { bird.position.x += camDir.x*0.4*spd; bird.position.z += camDir.z*0.4*spd; } if(keys.up) bird.position.y += 0.25*agi; if(keys.down) bird.position.y -= 0.25*agi; } else { if(keys.w) { bird.position.x += camDir.x*0.5*spd; bird.position.z += camDir.z*0.5*spd; } if(keys.q) mouseX -= 0.025*agi; if(keys.e) mouseX += 0.025*agi; if(keys.space) bird.position.y += 0.3*agi; if(keys.shift) bird.position.y -= 0.3*agi; } bird.position.y = Math.max(4, Math.min(40, bird.position.y)); ['x','z'].forEach(ax => { if(Math.abs(bird.position[ax]) > boundary-6) bird.position[ax] = Math.sign(bird.position[ax])*(boundary-6); }); const offset = new THREE.Vector3(-9, 5, 12); offset.applyEuler(new THREE.Euler(mouseY, mouseX, 0, 'YXZ')); camera.position.copy(bird.position).add(offset); camera.lookAt(bird.position.clone().add(new THREE.Vector3(0, 2, 0))); bird.rotation.y = mouseX; }
+            wingFlap += 0.25; leftWing.rotation.z = -0.4 + Math.sin(wingFlap)*0.4; rightWing.rotation.z = 0.4 - Math.sin(wingFlap)*0.4;
+            globalAnger = Math.max(0, globalAnger - delta*0.5); updateAngerUI();
+            bullets.forEach((b,i) => { b.position.add(b.userData.velocity.clone().multiplyScalar(delta*60)); b.userData.velocity.y -= delta * 2; const age = performance.now() - (b.userData.birthTime || 0); if (!b.userData.birthTime) b.userData.birthTime = performance.now(); if (b.position.y < 0.5 || age > 10000) { scene.remove(b); bullets.splice(i,1); } else if (b.position.distanceTo(bird.position) < 4.5 && !caged) { captureBird(); scene.remove(b); bullets.splice(i,1); } });
+            droppings.forEach((d,i) => { d.position.y += d.userData.velocity.y * delta * 60; d.userData.velocity.y -= delta * 8; entities.forEach(e => { if(e.userData.type !== 'animal' && d.position.distanceTo(e.position) < 3.5) { const damage = d.userData.demonic ? 2 : 1; e.userData.health -= damage; const healthPercent = (e.userData.health / e.userData.maxHealth) * 100; if (e.userData.healthBar) e.userData.healthBar.fill.style.width = healthPercent + '%'; e.userData.anger = Math.min(100, e.userData.anger + (d.userData.demonic ? 40 : 25)); globalAnger = Math.min(maxAnger, globalAnger + (d.userData.demonic ? 15 : 8)); updateAngerUI(); e.userData.labelDiv.textContent = '😠'; e.userData.target = bird.position.clone(); gameData.coins += d.userData.demonic ? 10 : 5; updateCoinsDisplay(); playSound('coin'); showMessage(`💩 ${d.userData.demonic ? '💀 ДЕМОНИЧЕСКИЙ' : ''} -${damage} HP! +${d.userData.demonic ? 10 : 5}🪙`); if (e.userData.health <= 0) respawnPerson(e); scene.remove(d); droppings.splice(i,1); } }); if(d.position.y < 0.3 || performance.now() - d.userData.birthTime > d.userData.lifetime) { scene.remove(d); droppings.splice(i,1); } });
+            entities.forEach(e => { if(!e.parent) return; const d = e.userData; d.anger = Math.max(0, d.anger - delta*2); if(d.anger > 20) d.labelDiv.textContent = '😠'; else d.labelDiv.textContent = d.type==='hunter'?'Охотник':'Житель'; if(d.type !== 'animal' && (d.anger > 15 || globalAnger > 10)) d.target = bird.position.clone(); if(d.target) { const dir = new THREE.Vector3().subVectors(d.target, e.position); if(dir.length() < 3.0) { if(d.type==='hunter' && !caged && globalAnger >= 10) captureBird(); d.target = null; } else { dir.normalize(); e.position.x += dir.x * d.speed * delta * 60; e.position.z += dir.z * d.speed * delta * 60; } } else if(Math.random() < delta * 0.3) d.target = new THREE.Vector3(e.position.x+(Math.random()-0.5)*12, 0, e.position.z+(Math.random()-0.5)*12); if(d.type === 'hunter' && !caged && globalAnger >= 10) { if(e.position.distanceTo(bird.position) < 210 && performance.now() - d.lastShot > 15000) { d.lastShot = performance.now(); playSound('shoot'); const bullet = new THREE.Mesh(new THREE.SphereGeometry(0.5), new THREE.MeshStandardMaterial({color:0xffaa00, emissive:0xff4400, emissiveIntensity:1.2})); bullet.position.copy(e.position).add(new THREE.Vector3(0,1.5,0)); bullet.userData = {velocity: new THREE.Vector3().subVectors(bird.position, e.position).normalize().multiplyScalar(0.8), birthTime: performance.now()}; bullet.castShadow = true; scene.add(bullet); bullets.push(bullet); showMessage('🔫 Выстрел!'); } } });
+            renderer.render(scene, camera); cssRenderer.render(scene, camera);
         }
-        
         requestAnimationFrame(animate);
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth/window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            cssRenderer.setSize(window.innerWidth, window.innerHeight);
-        });
+        window.addEventListener('resize', () => { camera.aspect = window.innerWidth/window.innerHeight; camera.updateProjectionMatrix(); renderer.setSize(window.innerWidth, window.innerHeight); cssRenderer.setSize(window.innerWidth, window.innerHeight); });
     </script>
 </body>
 </html>
