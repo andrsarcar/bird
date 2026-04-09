@@ -22,31 +22,62 @@
         }
         .menu-content {
             background: rgba(30,40,50,0.95); padding: 20px 25px; border-radius: 30px;
-            max-width: 500px; width: 90%; text-align: center;
+            max-width: 700px; width: 90%; max-height: 90vh; overflow-y: auto;
             box-shadow: 0 20px 40px rgba(0,0,0,0.7); border: 1px solid #6a8aaa;
         }
-        .menu-content h1 { color: #ffcc88; font-size: 30px; margin-bottom: 5px; }
-        .menu-content h2 { color: #aaccdd; font-size: 14px; margin-bottom: 15px; }
-        .control-selector { display: flex; gap: 10px; justify-content: center; margin: 15px 0; }
+        .menu-content h1 { color: #ffcc88; font-size: 28px; margin-bottom: 5px; }
+        
+        .coins-display {
+            background: linear-gradient(135deg, #ffd700, #ffaa00);
+            color: #333; padding: 10px 20px; border-radius: 30px;
+            font-size: 22px; font-weight: bold; margin: 10px 0;
+            display: inline-block;
+        }
+        
+        .control-selector { display: flex; gap: 10px; justify-content: center; margin: 10px 0; }
         .control-btn {
             background: #2a3a4a; color: #ccddee; border: 2px solid #4a6a8a;
-            padding: 10px 15px; border-radius: 15px; cursor: pointer;
-            font-size: 14px; font-weight: bold; flex: 1;
+            padding: 8px 12px; border-radius: 12px; cursor: pointer;
+            font-size: 13px; font-weight: bold; flex: 1;
         }
         .control-btn.active { background: #4a8a6a; border-color: #8accaa; color: white; }
-        .controls-grid {
-            display: grid; grid-template-columns: auto 1fr; gap: 8px 12px;
-            text-align: left; margin: 15px 0; background: rgba(0,0,0,0.3);
-            padding: 12px; border-radius: 15px; font-size: 13px;
+        
+        .skins-title {
+            color: #ffcc88; font-size: 16px; margin: 15px 0 10px;
+            border-bottom: 1px solid #6a8aaa; padding-bottom: 5px;
         }
-        .key-badge {
-            background: #2a4a6a; color: #ffd966; padding: 4px 10px;
-            border-radius: 8px; font-weight: bold; border-bottom: 2px solid #1a3a5a;
+        .skins-grid {
+            display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px;
+            margin: 10px 0; padding: 5px;
         }
+        .skin-card {
+            background: rgba(20,30,40,0.8); border: 2px solid #4a6a8a;
+            border-radius: 12px; padding: 8px 4px; cursor: pointer;
+            transition: all 0.2s; text-align: center;
+        }
+        .skin-card.locked { opacity: 0.5; filter: grayscale(0.7); }
+        .skin-card.active {
+            border-color: #ffcc88; background: rgba(60,80,100,0.9);
+            box-shadow: 0 0 15px #ffcc88;
+        }
+        .skin-emoji { font-size: 28px; margin-bottom: 3px; }
+        .skin-name { color: #ffd966; font-size: 11px; font-weight: bold; }
+        .skin-stats { color: #aaccdd; font-size: 9px; margin-top: 3px; }
+        .skin-price { color: #ffd700; font-size: 10px; margin-top: 2px; }
+        .skin-ability { color: #88ccff; font-size: 9px; margin-top: 2px; }
+        
+        .upgrade-section {
+            margin: 15px 0; padding: 10px; background: rgba(0,0,0,0.2); border-radius: 15px;
+        }
+        .upgrade-btn {
+            background: #3a5a6a; color: white; border: none; padding: 8px 15px;
+            border-radius: 20px; cursor: pointer; font-size: 12px; margin: 5px;
+        }
+        
         .start-btn {
-            background: #5a8a6a; color: white; border: none; padding: 14px 30px;
-            font-size: 20px; font-weight: bold; border-radius: 50px; cursor: pointer;
-            margin-top: 10px; border-bottom: 5px solid #3a6a4a; width: 100%;
+            background: #5a8a6a; color: white; border: none; padding: 12px 25px;
+            font-size: 18px; font-weight: bold; border-radius: 50px; cursor: pointer;
+            margin-top: 15px; border-bottom: 5px solid #3a6a4a; width: 100%;
         }
         
         #game-ui { opacity: 1; pointer-events: none; }
@@ -55,6 +86,18 @@
             background: rgba(20,25,35,0.85); color: #ffcc88; padding: 6px 14px;
             border-radius: 30px; backdrop-filter: blur(4px); z-index: 100;
             border-left: 4px solid #aa8844; font-size: 14px;
+        }
+        #game-coins {
+            position: absolute; top: 50px; left: 10px;
+            background: rgba(20,25,35,0.85); color: #ffd700; padding: 6px 14px;
+            border-radius: 30px; backdrop-filter: blur(4px); z-index: 100;
+            font-size: 14px; font-weight: bold;
+        }
+        #time-indicator {
+            position: absolute; top: 90px; left: 10px;
+            background: rgba(20,25,35,0.85); color: #aaccdd; padding: 6px 14px;
+            border-radius: 30px; backdrop-filter: blur(4px); z-index: 100;
+            font-size: 14px;
         }
         #status-bar {
             position: absolute; top: 10px; right: 10px;
@@ -75,20 +118,24 @@
             background: rgba(20,25,35,0.8); color: #aaccdd; padding: 5px 12px;
             border-radius: 20px; font-size: 12px;
         }
+        #ability-indicator {
+            position: absolute; bottom: 180px; right: 10px;
+            background: rgba(20,25,35,0.8); color: #88ccff; padding: 5px 12px;
+            border-radius: 20px; font-size: 12px;
+        }
         
         #mobile-controls {
             position: absolute; bottom: 15px; left: 0; right: 0;
-            display: none; justify-content: center; gap: 10px; padding: 5px;
+            display: none; justify-content: center; gap: 8px; padding: 5px;
             z-index: 200; pointer-events: none;
         }
         #mobile-controls.active { display: flex; flex-wrap: wrap; }
         .mobile-btn {
             background: rgba(30,40,55,0.9); color: #ffd966; border: 2px solid #5a7a9a;
-            border-radius: 15px; padding: 12px 18px; font-size: 18px; font-weight: bold;
-            pointer-events: auto; cursor: pointer; min-width: 60px; text-align: center;
-            touch-action: manipulation;
+            border-radius: 15px; padding: 10px 14px; font-size: 16px; font-weight: bold;
+            pointer-events: auto; cursor: pointer; min-width: 55px; text-align: center;
         }
-        .mobile-btn:active { background: rgba(60,80,100,0.9); transform: scale(0.95); }
+        .mobile-btn.special { background: rgba(80,60,100,0.9); color: #cc88ff; border-color: #aa88cc; }
         
         #camera-controls {
             position: absolute; left: 10px; bottom: 180px;
@@ -97,20 +144,29 @@
         #camera-controls.active { display: flex; }
         .camera-btn {
             background: rgba(30,40,55,0.9); color: #88aacc; border: 2px solid #4a6a8a;
-            border-radius: 15px; padding: 12px 18px; font-size: 20px; font-weight: bold;
+            border-radius: 15px; padding: 10px 14px; font-size: 18px; font-weight: bold;
             pointer-events: auto; cursor: pointer; text-align: center;
         }
         
         #height-controls {
-            position: absolute; right: 10px; bottom: 180px;
+            position: absolute; right: 10px; bottom: 240px;
             display: none; flex-direction: column; gap: 8px; z-index: 200; pointer-events: none;
         }
         #height-controls.active { display: flex; }
         .height-btn {
             background: rgba(30,40,55,0.9); color: #aaccdd; border: 2px solid #5a7a9a;
-            border-radius: 15px; padding: 12px 18px; font-size: 18px; font-weight: bold;
+            border-radius: 15px; padding: 10px 14px; font-size: 16px; font-weight: bold;
             pointer-events: auto; cursor: pointer; text-align: center;
         }
+        
+        #exit-btn {
+            position: absolute; top: 10px; left: 50%; transform: translateX(-50%);
+            background: rgba(80,40,40,0.8); color: #ffaaaa; padding: 5px 15px;
+            border-radius: 20px; font-size: 12px; cursor: pointer;
+            pointer-events: auto; z-index: 500; border: 1px solid #aa5555;
+            display: none;
+        }
+        #exit-btn.active { display: block; }
         
         #message-popup {
             position: absolute; bottom: 100px; left: 50%; transform: translateX(-50%);
@@ -128,15 +184,20 @@
             background: rgba(20,25,35,0.8); color: #ccaa88; padding: 5px 12px;
             border-radius: 20px; font-size: 11px;
         }
-        #sound-toggle {
-            position: absolute; bottom: 10px; right: 10px;
-            background: rgba(20,25,35,0.8); color: #aaccdd; padding: 6px 12px;
-            border-radius: 20px; font-size: 12px; cursor: pointer;
-            pointer-events: auto; z-index: 400; border: 1px solid #5a7a9a;
-        }
         
-        @media (max-width: 400px) {
-            .mobile-btn, .camera-btn, .height-btn { padding: 10px 14px; font-size: 16px; min-width: 50px; }
+        .health-bar {
+            position: absolute;
+            width: 40px;
+            height: 4px;
+            background: #333;
+            border-radius: 2px;
+            overflow: hidden;
+            transform: translate(-50%, -50%);
+        }
+        .health-fill {
+            height: 100%;
+            background: #ff4444;
+            transition: width 0.2s;
         }
     </style>
 </head>
@@ -144,33 +205,30 @@
     <div id="start-menu">
         <div class="menu-content">
             <h1>🐦 Птица в деревне</h1>
-            <h2>Выберите управление</h2>
+            <div class="coins-display" id="menu-coins">🪙 0 монет</div>
             <div class="control-selector">
                 <button class="control-btn active" data-control="pc">💻 ПК</button>
                 <button class="control-btn" data-control="mobile">📱 Телефон</button>
             </div>
-            <div class="controls-grid" id="pc-controls">
-                <span class="key-badge">W</span><span>Вперёд</span>
-                <span class="key-badge">Q/E</span><span>Поворот камеры</span>
-                <span class="key-badge">ПРОБЕЛ</span><span>Вверх</span>
-                <span class="key-badge">SHIFT</span><span>Вниз</span>
-                <span class="key-badge">F</span><span>Помёт</span>
-                <span class="key-badge">МЫШЬ</span><span>Обзор</span>
+            
+            <div class="skins-title">🎨 Образы</div>
+            <div class="skins-grid" id="skins-container"></div>
+            
+            <div class="upgrade-section">
+                <strong style="color:#ffcc88;">⬆️ Прокачка</strong><br>
+                <button class="upgrade-btn" id="upgrade-speed">⚡ Скорость (50🪙)</button>
+                <button class="upgrade-btn" id="upgrade-agility">🌀 Ловкость (50🪙)</button>
+                <button class="upgrade-btn" id="upgrade-ability">✨ Суперспособность (100🪙)</button>
             </div>
-            <div class="controls-grid" id="mobile-controls-info" style="display:none;">
-                <span class="key-badge">↑</span><span>Вперёд</span>
-                <span class="key-badge">◀ ▶</span><span>Поворот камеры</span>
-                <span class="key-badge">⬆️⬇️</span><span>Высота</span>
-                <span class="key-badge">💩</span><span>Помёт</span>
-                <span class="key-badge">👆</span><span>Обзор (свайп)</span>
-            </div>
+            
             <button class="start-btn" id="start-game-btn">НАЧАТЬ ПОЛЁТ</button>
-            <div style="color:#aaccdd; font-size:11px; margin-top:10px;">◀ ▶ вращают камеру, не птицу</div>
         </div>
     </div>
 
     <div id="game-ui">
-        <div id="ui-top">🐦 Птица в деревне</div>
+        <div id="ui-top">🐦 <span id="bird-name">Воробей</span></div>
+        <div id="game-coins">🪙 <span id="game-coins-value">0</span></div>
+        <div id="time-indicator">🌞 День</div>
         <div id="status-bar">
             <span>🏹 <span id="hunter-count">2</span></span>
             <div style="display:flex; align-items:center; gap:4px;">
@@ -182,22 +240,25 @@
         </div>
         <div id="cage-timer">10</div>
         <div id="cooldown-indicator"><span id="poop-cooldown-text">💩 Готов</span></div>
-        <div id="hunter-status">🏹 Охотники: 🟢 Спокойны</div>
-        <div id="sound-toggle" onclick="toggleSound()">🔊 Звук</div>
+        <div id="ability-indicator"><span id="ability-status">✨ Готов</span></div>
+        <div id="hunter-status">🏹 Охотники: 🟢</div>
+        <div id="exit-btn">🚪 ВЫХОД (L)</div>
         
         <div id="mobile-controls">
-            <button class="mobile-btn" data-action="forward">↑ Вперёд</button>
-            <button class="mobile-btn" data-action="poop">💩 Помёт</button>
+            <button class="mobile-btn" data-action="forward">↑</button>
+            <button class="mobile-btn" data-action="poop">💩</button>
+            <button class="mobile-btn special" data-action="ability">✨</button>
+            <button class="mobile-btn" data-action="exit" style="background:#884444; color:#ffaaaa;">🚪</button>
         </div>
         
         <div id="camera-controls">
-            <button class="camera-btn" data-action="cam-left">◀ Камера</button>
-            <button class="camera-btn" data-action="cam-right">Камера ▶</button>
+            <button class="camera-btn" data-action="cam-left">◀</button>
+            <button class="camera-btn" data-action="cam-right">▶</button>
         </div>
         
         <div id="height-controls">
-            <button class="height-btn" data-action="up">⬆️ Вверх</button>
-            <button class="height-btn" data-action="down">⬇️ Вниз</button>
+            <button class="height-btn" data-action="up">⬆️</button>
+            <button class="height-btn" data-action="down">⬇️</button>
         </div>
         
         <div id="message-popup"></div>
@@ -212,55 +273,80 @@
         import * as THREE from 'three';
         import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
 
-        // Звук
-        let audioContext = null;
-        let soundEnabled = true;
+        const SAVE_KEY = 'birdVillageSave';
+        let gameData = { coins: 500, unlockedSkins: [0], skins: [] };
         
-        function initAudio() {
-            if(audioContext) return;
-            try { audioContext = new (window.AudioContext || window.webkitAudioContext)(); } catch(e) {}
-        }
+        const baseSkins = [
+            { name: 'Воробей', emoji: '🐦', color: 0xcc9944, size: 0.8, speed: 1.2, agility: 1.3, price: 0, ability: 'Ускорение' },
+            { name: 'Орёл', emoji: '🦅', color: 0x8B4513, size: 1.2, speed: 0.9, agility: 0.7, price: 100, ability: 'Крик' },
+            { name: 'Голубь', emoji: '🕊️', color: 0xaaaaaa, size: 0.85, speed: 1.0, agility: 1.0, price: 50, ability: 'Мир' },
+            { name: 'Ворон', emoji: '🐦‍⬛', color: 0x222222, size: 0.9, speed: 1.1, agility: 1.2, price: 150, ability: 'Тень' },
+            { name: 'Попугай', emoji: '🦜', color: 0xff4444, size: 0.85, speed: 1.15, agility: 1.4, price: 120, ability: 'Копия' },
+            { name: 'Сова', emoji: '🦉', color: 0x8B7355, size: 0.95, speed: 0.8, agility: 0.9, price: 80, ability: 'Ночное зрение' },
+            { name: 'Фламинго', emoji: '🦩', color: 0xff69b4, size: 1.1, speed: 0.85, agility: 0.6, price: 90, ability: 'Грация' },
+            { name: 'Колибри', emoji: '🐦', color: 0x00ff88, size: 0.6, speed: 1.5, agility: 2.0, price: 200, ability: 'Телепорт' },
+            { name: 'Пингвин', emoji: '🐧', color: 0x334455, size: 0.9, speed: 0.7, agility: 0.5, price: 70, ability: 'Скольжение' },
+            { name: 'Феникс', emoji: '🔥', color: 0xff6600, size: 1.0, speed: 1.3, agility: 1.1, price: 300, ability: 'Возрождение' }
+        ];
         
-        function playSound(type) {
-            if(!soundEnabled || !audioContext) return;
-            if(audioContext.state === 'suspended') audioContext.resume();
-            const now = audioContext.currentTime;
-            const osc = audioContext.createOscillator();
-            const gain = audioContext.createGain();
-            osc.connect(gain); gain.connect(audioContext.destination);
-            
-            switch(type) {
-                case 'shoot': osc.type='sawtooth'; osc.frequency.value=180; gain.gain.setValueAtTime(0.12,now); gain.gain.exponentialRampToValueAtTime(0.01,now+0.15); osc.start(); osc.stop(now+0.15); break;
-                case 'bullet_fly': osc.type='sine'; osc.frequency.value=800; osc.frequency.exponentialRampToValueAtTime(400,now+0.12); gain.gain.setValueAtTime(0.06,now); gain.gain.exponentialRampToValueAtTime(0.01,now+0.12); osc.start(); osc.stop(now+0.12); break;
-                case 'poop': osc.type='triangle'; osc.frequency.value=120; gain.gain.setValueAtTime(0.08,now); gain.gain.exponentialRampToValueAtTime(0.01,now+0.1); osc.start(); osc.stop(now+0.1); break;
-                case 'anger': osc.type='square'; osc.frequency.value=200; gain.gain.setValueAtTime(0.1,now); gain.gain.exponentialRampToValueAtTime(0.01,now+0.2); osc.start(); osc.stop(now+0.2); break;
+        function loadGame() {
+            const saved = localStorage.getItem(SAVE_KEY);
+            if (saved) {
+                gameData = JSON.parse(saved);
+                gameData.skins.forEach((s, i) => { if (baseSkins[i]) { baseSkins[i].speed = s.speed; baseSkins[i].agility = s.agility; baseSkins[i].abilityLevel = s.abilityLevel || 1; } });
+            } else {
+                gameData.skins = baseSkins.map(s => ({ speed: s.speed, agility: s.agility, abilityLevel: 1 }));
+                gameData.unlockedSkins = [0];
             }
+            updateCoinsDisplay();
         }
+        function saveGame() {
+            gameData.skins = baseSkins.map(s => ({ speed: s.speed, agility: s.agility, abilityLevel: s.abilityLevel || 1 }));
+            localStorage.setItem(SAVE_KEY, JSON.stringify(gameData));
+        }
+        function updateCoinsDisplay() {
+            document.getElementById('menu-coins').textContent = `🪙 ${gameData.coins} монет`;
+            document.getElementById('game-coins-value').textContent = gameData.coins;
+        }
+        loadGame();
         
-        window.toggleSound = function() {
-            soundEnabled = !soundEnabled;
-            document.getElementById('sound-toggle').textContent = soundEnabled ? '🔊 Звук' : '🔇 Звук';
-            if(soundEnabled && !audioContext) initAudio();
-        };
+        let selectedSkinIndex = 0, controlMode = 'pc', gameStarted = false;
+        let bird, leftWing, rightWing, abilityCooldown = 0, abilityActive = false;
+        let dayTime = 0.5;
+        let nightVisionActive = false;
         
-        document.addEventListener('click', () => { if(!audioContext) initAudio(); }, {once: true});
-        document.addEventListener('touchstart', () => { if(!audioContext) initAudio(); }, {once: true});
-
-        // Игра
-        let controlMode = 'pc';
-        let gameStarted = false;
-        
-        document.querySelectorAll('[data-control]').forEach(btn => {
-            btn.addEventListener('click', () => {
-                document.querySelectorAll('[data-control]').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                controlMode = btn.dataset.control;
-                document.getElementById('pc-controls').style.display = controlMode === 'pc' ? 'grid' : 'none';
-                document.getElementById('mobile-controls-info').style.display = controlMode === 'mobile' ? 'grid' : 'none';
+        const container = document.getElementById('skins-container');
+        function renderSkinGrid() {
+            container.innerHTML = '';
+            baseSkins.forEach((skin, i) => {
+                const unlocked = gameData.unlockedSkins.includes(i);
+                const card = document.createElement('div');
+                card.className = 'skin-card' + (i === selectedSkinIndex ? ' active' : '') + (unlocked ? '' : ' locked');
+                card.innerHTML = `<div class="skin-emoji">${skin.emoji}</div><div class="skin-name">${skin.name}</div><div class="skin-stats">⚡${skin.speed.toFixed(1)} 🌀${skin.agility.toFixed(1)}</div>${!unlocked ? `<div class="skin-price">🔒 ${skin.price}🪙</div>` : ''}<div class="skin-ability">✨ ${skin.ability}</div>`;
+                card.addEventListener('click', () => {
+                    if (!unlocked) {
+                        if (gameData.coins >= skin.price) { gameData.coins -= skin.price; gameData.unlockedSkins.push(i); saveGame(); updateCoinsDisplay(); renderSkinGrid(); showMessage(`Куплен: ${skin.name}!`); }
+                        else showMessage('Недостаточно монет!');
+                        return;
+                    }
+                    selectedSkinIndex = i; renderSkinGrid(); if (!gameStarted) updatePreviewBird();
+                });
+                container.appendChild(card);
             });
-        });
+        }
+        renderSkinGrid();
         
-        // Сцена
+        document.getElementById('upgrade-speed').addEventListener('click', () => { const s = baseSkins[selectedSkinIndex]; if (gameData.coins >= 50) { gameData.coins -= 50; s.speed *= 1.1; saveGame(); updateCoinsDisplay(); renderSkinGrid(); } });
+        document.getElementById('upgrade-agility').addEventListener('click', () => { const s = baseSkins[selectedSkinIndex]; if (gameData.coins >= 50) { gameData.coins -= 50; s.agility *= 1.1; saveGame(); updateCoinsDisplay(); renderSkinGrid(); } });
+        document.getElementById('upgrade-ability').addEventListener('click', () => { const s = baseSkins[selectedSkinIndex]; if (gameData.coins >= 100) { gameData.coins -= 100; s.abilityLevel = (s.abilityLevel || 1) + 1; saveGame(); updateCoinsDisplay(); renderSkinGrid(); } });
+        
+        document.querySelectorAll('[data-control]').forEach(btn => btn.addEventListener('click', () => { document.querySelectorAll('[data-control]').forEach(b => b.classList.remove('active')); btn.classList.add('active'); controlMode = btn.dataset.control; }));
+
+        let audioContext = null;
+        function initAudio() { if(!audioContext) try { audioContext = new (window.AudioContext || window.webkitAudioContext)(); } catch(e) {} }
+        function playSound(t) { if(!audioContext) return; if(audioContext.state === 'suspended') audioContext.resume(); const o = audioContext.createOscillator(), g = audioContext.createGain(); o.connect(g); g.connect(audioContext.destination); const n = audioContext.currentTime; if(t==='shoot'){ o.type='sawtooth'; o.frequency.value=180; g.gain.setValueAtTime(0.15,n); g.gain.exponentialRampToValueAtTime(0.01,n+0.2); o.start(); o.stop(n+0.2); } else if(t==='poop'){ o.type='triangle'; o.frequency.value=120; g.gain.setValueAtTime(0.1,n); g.gain.exponentialRampToValueAtTime(0.01,n+0.15); o.start(); o.stop(n+0.15); } else if(t==='coin'){ o.type='sine'; o.frequency.value=800; g.gain.setValueAtTime(0.1,n); g.gain.exponentialRampToValueAtTime(0.01,n+0.1); o.start(); o.stop(n+0.1); } else if(t==='ability'){ o.type='sine'; o.frequency.value=600; g.gain.setValueAtTime(0.15,n); g.gain.exponentialRampToValueAtTime(0.01,n+0.3); o.start(); o.stop(n+0.3); } }
+        document.addEventListener('click', () => { if(!audioContext) initAudio(); }, {once: true});
+        
         const scene = new THREE.Scene();
         scene.background = new THREE.Color(0x7a9ab5);
         scene.fog = new THREE.FogExp2(0x7a9ab5, 0.0015);
@@ -273,7 +359,7 @@
         renderer.shadowMap.enabled = true;
         renderer.shadowMap.type = THREE.PCFSoftShadowMap;
         document.body.appendChild(renderer.domElement);
-
+        
         const cssRenderer = new CSS2DRenderer();
         cssRenderer.setSize(window.innerWidth, window.innerHeight);
         cssRenderer.domElement.style.position = 'absolute';
@@ -281,33 +367,31 @@
         cssRenderer.domElement.style.pointerEvents = 'none';
         document.body.appendChild(cssRenderer.domElement);
 
-        // Освещение
-        scene.add(new THREE.AmbientLight(0x556677, 0.6));
-        const sun = new THREE.DirectionalLight(0xeeddcc, 1.2);
-        sun.position.set(60, 100, 40);
-        sun.castShadow = true; sun.receiveShadow = true;
-        sun.shadow.mapSize.width = 1024; sun.shadow.mapSize.height = 1024;
+        const ambientLight = new THREE.AmbientLight(0x556677, 0.6);
+        scene.add(ambientLight);
+        const sunLight = new THREE.DirectionalLight(0xeeddcc, 1.2);
+        sunLight.position.set(60, 100, 40);
+        sunLight.castShadow = true; sunLight.receiveShadow = true;
+        sunLight.shadow.mapSize.width = 1024; sunLight.shadow.mapSize.height = 1024;
         const d = 200;
-        sun.shadow.camera.left = -d; sun.shadow.camera.right = d;
-        sun.shadow.camera.top = d; sun.shadow.camera.bottom = -d;
-        sun.shadow.camera.near = 1; sun.shadow.camera.far = 350;
-        scene.add(sun);
+        sunLight.shadow.camera.left = -d; sunLight.shadow.camera.right = d;
+        sunLight.shadow.camera.top = d; sunLight.shadow.camera.bottom = -d;
+        sunLight.shadow.camera.near = 1; sunLight.shadow.camera.far = 350;
+        scene.add(sunLight);
+        
+        const moonLight = new THREE.DirectionalLight(0x8899bb, 0.4);
+        moonLight.position.set(-40, 60, -50);
+        moonLight.castShadow = true; moonLight.receiveShadow = true;
+        moonLight.shadow.mapSize.width = 512; moonLight.shadow.mapSize.height = 512;
+        scene.add(moonLight);
 
-        // Земля
-        const mapSize = 250;
-        const boundary = mapSize - 10;
-        
+        const mapSize = 300, boundary = mapSize - 10;
         const ground = new THREE.Mesh(new THREE.CircleGeometry(mapSize, 64), new THREE.MeshStandardMaterial({color: 0x6a8a5e}));
-        ground.rotation.x = -Math.PI/2;
-        ground.position.y = 0;
-        ground.receiveShadow = true;
+        ground.rotation.x = -Math.PI/2; ground.position.y = 0; ground.receiveShadow = true;
         scene.add(ground);
-        
         const grid = new THREE.GridHelper(mapSize*2, 30, 0x557755, 0x446644);
-        grid.position.y = 0.01;
-        scene.add(grid);
+        grid.position.y = 0.01; scene.add(grid);
         
-        // Забор
         const postMat = new THREE.MeshStandardMaterial({color: 0x7a6a5a});
         for(let i=0; i<50; i++) {
             const a = (i/50)*Math.PI*2;
@@ -317,22 +401,17 @@
             scene.add(post);
         }
         
-        // Река
         const river = new THREE.Mesh(new THREE.PlaneGeometry(12, 280), new THREE.MeshStandardMaterial({color: 0x4a7a9a, transparent: true}));
-        river.rotation.x = -Math.PI/2;
-        river.position.y = 0.02;
-        river.position.z = 15;
+        river.rotation.x = -Math.PI/2; river.position.y = 0.02; river.position.z = 15;
         scene.add(river);
         
-        // Дома
         function makeHouse(x, z, c) {
             const g = new THREE.Group();
             const w = new THREE.Mesh(new THREE.BoxGeometry(3.8,2.8,3.8), new THREE.MeshStandardMaterial({color: [0xb0a090,0xa09080,0x9a8a7a][c%3]}));
             w.position.y = 1.4; w.castShadow = true; w.receiveShadow = true; g.add(w);
             const roof = new THREE.Mesh(new THREE.ConeGeometry(3.0,1.6,4), new THREE.MeshStandardMaterial({color: 0x7a5a4a}));
             roof.position.y = 3.0; roof.rotation.y = Math.PI/4; roof.castShadow = true; g.add(roof);
-            g.position.set(x, 0, z);
-            return g;
+            g.position.set(x, 0, z); return g;
         }
         for(let i=0; i<15; i++) {
             let x,z;
@@ -340,7 +419,6 @@
             scene.add(makeHouse(x,z,i));
         }
         
-        // Деревья
         function tree(x,z) {
             const g = new THREE.Group();
             const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.6,0.8,2.8), new THREE.MeshStandardMaterial({color: 0x6a5a4a}));
@@ -356,44 +434,68 @@
             scene.add(tree(x,z));
         }
 
-        // Птица
-        const bird = new THREE.Group();
-        bird.add(new THREE.Mesh(new THREE.SphereGeometry(0.85), new THREE.MeshStandardMaterial({color:0xcc9944})));
-        const head = new THREE.Mesh(new THREE.SphereGeometry(0.5), new THREE.MeshStandardMaterial({color:0xccaa55}));
-        head.position.set(0,0.65,0.75); bird.add(head);
-        bird.add(new THREE.Mesh(new THREE.ConeGeometry(0.18,0.45), new THREE.MeshStandardMaterial({color:0xcc7733}))).position.set(0,0.6,1.15);
-        const leftWing = new THREE.Mesh(new THREE.BoxGeometry(0.85,0.1,0.55), new THREE.MeshStandardMaterial({color:0xaa8844}));
-        leftWing.position.set(-0.9,0.3,0); leftWing.rotation.z=-0.4; leftWing.castShadow=true; bird.add(leftWing);
-        const rightWing = new THREE.Mesh(new THREE.BoxGeometry(0.85,0.1,0.55), new THREE.MeshStandardMaterial({color:0xaa8844}));
-        rightWing.position.set(0.9,0.3,0); rightWing.rotation.z=0.4; rightWing.castShadow=true; bird.add(rightWing);
-        bird.position.set(0, 12, 25);
-        bird.castShadow = true;
+        function createBird(skin) {
+            const g = new THREE.Group();
+            const bodyColor = skin.color, size = skin.size;
+            const body = new THREE.Mesh(new THREE.SphereGeometry(0.85 * size), new THREE.MeshStandardMaterial({color: bodyColor}));
+            body.castShadow = true; body.receiveShadow = true; g.add(body);
+            const head = new THREE.Mesh(new THREE.SphereGeometry(0.5 * size), new THREE.MeshStandardMaterial({color: bodyColor}));
+            head.position.set(0, 0.65 * size, 0.75 * size); head.castShadow = true; g.add(head);
+            const beak = new THREE.Mesh(new THREE.ConeGeometry(0.18 * size, 0.45 * size), new THREE.MeshStandardMaterial({color: skin.name === 'Ворон' ? 0x333333 : 0xcc7733}));
+            beak.position.set(0, 0.6 * size, 1.15 * size); beak.rotation.x = 0.2; beak.castShadow = true; g.add(beak);
+            const wingGeo = new THREE.BoxGeometry(0.85 * size, 0.1 * size, 0.55 * size);
+            const wingMat = new THREE.MeshStandardMaterial({color: skin.name === 'Ворон' ? 0x444444 : 0xaa8844});
+            const lw = new THREE.Mesh(wingGeo, wingMat); lw.position.set(-0.9 * size, 0.3 * size, 0); lw.rotation.z = -0.4; lw.castShadow = true; g.add(lw);
+            const rw = new THREE.Mesh(wingGeo, wingMat); rw.position.set(0.9 * size, 0.3 * size, 0); rw.rotation.z = 0.4; rw.castShadow = true; g.add(rw);
+            return { group: g, leftWing: lw, rightWing: rw };
+        }
+        
+        function updatePreviewBird() {
+            if (bird) scene.remove(bird);
+            const skin = baseSkins[selectedSkinIndex];
+            const obj = createBird(skin);
+            bird = obj.group; leftWing = obj.leftWing; rightWing = obj.rightWing;
+            bird.position.set(0, 12, 25); bird.castShadow = true;
+            scene.add(bird);
+            document.getElementById('bird-name').textContent = skin.name;
+        }
+        
+        let birdObj = createBird(baseSkins[0]);
+        bird = birdObj.group; leftWing = birdObj.leftWing; rightWing = birdObj.rightWing;
+        bird.position.set(0, 12, 25); bird.castShadow = true;
         scene.add(bird);
 
-        // Системы
         let globalAnger = 0;
         const maxAnger = 100;
-        const entities = [];
-        const hunters = [];
-        const bullets = [];
-        const droppings = [];
-        let poopCooldown = 0;
-        let caged = false;
-        let cageEndTime = 0;
+        const entities = [], hunters = [], bullets = [], droppings = [];
+        let poopCooldown = 0, caged = false, cageEndTime = 0;
         const cageGroup = new THREE.Group();
         
         function updateAngerUI() {
             const p = (globalAnger/maxAnger)*100;
             document.getElementById('anger-fill').style.width = p+'%';
             document.getElementById('anger-value').textContent = Math.round(p)+'%';
-            const hunterStatus = document.getElementById('hunter-status');
-            if(globalAnger >= 10) {
-                hunterStatus.innerHTML = '🏹 Охотники: 🔴';
-                hunterStatus.style.color = '#ff8888';
-            } else {
-                hunterStatus.innerHTML = '🏹 Охотники: 🟢';
-                hunterStatus.style.color = '#ccaa88';
+            const hs = document.getElementById('hunter-status');
+            if(globalAnger >= 10) { hs.innerHTML = '🏹 Охотники: 🔴'; hs.style.color = '#ff8888'; }
+            else { hs.innerHTML = '🏹 Охотники: 🟢'; hs.style.color = '#ccaa88'; }
+        }
+        
+        function respawnPerson(person) {
+            let x, z;
+            do {
+                const a = Math.random() * Math.PI * 2;
+                const r = 50 + Math.random() * 180;
+                x = Math.cos(a) * r;
+                z = Math.sin(a) * r;
+            } while (Math.abs(x) < 20 && z > -30 && z < 80);
+            person.position.set(x, 0, z);
+            person.userData.health = 5;
+            person.userData.anger = 0;
+            person.userData.target = null;
+            if (person.userData.healthBar) {
+                person.userData.healthBar.fill.style.width = '100%';
             }
+            showMessage(`🔄 ${person.userData.type === 'hunter' ? 'Охотник' : 'Житель'} возродился!`);
         }
         
         function createPerson(x, z, type='villager') {
@@ -401,15 +503,21 @@
             const skin = type==='hunter' ? 0x6a7a8a : 0xccaa99;
             const body = new THREE.Mesh(new THREE.CylinderGeometry(0.45,0.45,1.7), new THREE.MeshStandardMaterial({color:skin}));
             body.position.y=0.85; body.castShadow=true; body.receiveShadow=true; g.add(body);
-            const headMesh = new THREE.Mesh(new THREE.SphereGeometry(0.32), new THREE.MeshStandardMaterial({color:skin}));
-            headMesh.position.y=1.8; headMesh.castShadow=true; g.add(headMesh);
+            const head = new THREE.Mesh(new THREE.SphereGeometry(0.32), new THREE.MeshStandardMaterial({color:skin}));
+            head.position.y=1.8; head.castShadow=true; g.add(head);
             
             const div = document.createElement('div');
             div.style.cssText = 'color:#ddc;font-size:11px;font-weight:bold;background:rgba(30,20,20,0.6);padding:2px 5px;border-radius:8px;';
             div.textContent = type==='hunter'?'Охотник':'Житель';
-            const label = new CSS2DObject(div);
-            label.position.set(0,2.5,0);
-            g.add(label);
+            const label = new CSS2DObject(div); label.position.set(0,2.8,0); g.add(label);
+            
+            // Шкала здоровья
+            const healthDiv = document.createElement('div');
+            healthDiv.className = 'health-bar';
+            healthDiv.innerHTML = '<div class="health-fill" style="width:100%"></div>';
+            const healthLabel = new CSS2DObject(healthDiv);
+            healthLabel.position.set(0, 2.2, 0);
+            g.add(healthLabel);
             
             if(type==='hunter') {
                 g.add(new THREE.Mesh(new THREE.ConeGeometry(0.45,0.45), new THREE.MeshStandardMaterial({color:0x4a3a2a}))).position.y=2.1;
@@ -417,7 +525,11 @@
                 gun.position.set(0.45,1.1,0.35); gun.rotation.z=0.3; g.add(gun);
             }
             g.position.set(x,0,z);
-            g.userData = {type, anger:0, labelDiv:div, speed:type==='hunter'?0.022:0.018, target:null, lastShot:0};
+            g.userData = {
+                type, health: 5, maxHealth: 5, anger: 0, labelDiv: div,
+                healthBar: { fill: healthDiv.children[0] },
+                speed: type==='hunter'?0.022:0.018, target: null, lastShot: 0
+            };
             return g;
         }
         
@@ -432,50 +544,88 @@
             scene.add(h); entities.push(h); hunters.push(h);
             document.getElementById('hunter-count').textContent = hunters.length;
         }
-        spawnHunter(-40,-30);
-        spawnHunter(45,20);
+        spawnHunter(-40,-30); spawnHunter(45,20);
         
-        // Клетка
         (function(){
             const m = new THREE.MeshStandardMaterial({color:0x9a9a9a});
             for(let i=0;i<4;i++){ const b=new THREE.Mesh(new THREE.BoxGeometry(0.2,2.8,0.2),m); b.position.set(i%2?-1.5:1.5,1.4,i<2?-1.5:1.5); b.castShadow=true; cageGroup.add(b); }
-            cageGroup.visible=false;
-            scene.add(cageGroup);
+            cageGroup.visible=false; scene.add(cageGroup);
         })();
         
         function captureBird() {
             if(caged) return;
-            caged = true;
-            cageEndTime = performance.now() + 10000;
-            cageGroup.position.copy(bird.position);
-            cageGroup.position.y = 0.5;
+            caged = true; cageEndTime = performance.now() + 10000;
+            cageGroup.position.copy(bird.position); cageGroup.position.y = 0.5;
             cageGroup.visible = true;
             document.getElementById('cage-timer').style.display = 'block';
             document.getElementById('cage-alert').innerHTML = '🔒';
+        }
+        
+        function useAbility() {
+            if (!gameStarted || caged || abilityCooldown > 0) return;
+            const skin = baseSkins[selectedSkinIndex];
+            abilityCooldown = 10;
+            playSound('ability');
+            
+            switch(skin.name) {
+                case 'Воробей': case 'Колибри': bird.position.y += 10; showMessage('✨ Рывок вверх!'); break;
+                case 'Орёл': entities.forEach(e => { if(e.userData.type === 'hunter') { e.userData.anger = 0; e.userData.target = null; } }); showMessage('🦅 Крик!'); break;
+                case 'Голубь': globalAnger = 0; entities.forEach(e => { e.userData.anger = 0; e.userData.target = null; }); updateAngerUI(); showMessage('🕊️ Мир!'); break;
+                case 'Ворон': bird.position.x = (Math.random()-0.5)*200; bird.position.z = (Math.random()-0.5)*200; showMessage('🌑 Телепорт!'); break;
+                case 'Феникс': globalAnger = 0; updateAngerUI(); showMessage('🔥 Возрождение!'); break;
+                case 'Сова':
+                    nightVisionActive = true;
+                    setTimeout(() => nightVisionActive = false, 5000);
+                    showMessage('🦉 Ночное зрение активировано!');
+                    break;
+                default: showMessage(`✨ ${skin.ability}!`);
+            }
         }
         
         function dropPoop() {
             if(caged || !gameStarted || poopCooldown > 0) return;
             poopCooldown = 1.0;
             playSound('poop');
-            
-            const poop = new THREE.Mesh(new THREE.SphereGeometry(0.3), new THREE.MeshStandardMaterial({color:0x7a6a5a}));
+            const poop = new THREE.Mesh(new THREE.SphereGeometry(0.35), new THREE.MeshStandardMaterial({color:0x7a6a5a}));
             poop.position.copy(bird.position); poop.position.y -= 0.7;
-            poop.userData = {velocity: new THREE.Vector3(0, 0.02, 0)};
+            poop.userData = {velocity: new THREE.Vector3(0, -2.5, 0), birthTime: performance.now(), lifetime: 10000};
             poop.castShadow = true;
             scene.add(poop); droppings.push(poop);
-            
             entities.forEach(e => {
-                if(e.userData.type !== 'animal' && poop.position.distanceTo(e.position) < 4.5) {
+                if(e.userData.type !== 'animal' && poop.position.distanceTo(e.position) < 5) {
+                    e.userData.health--;
+                    const healthPercent = (e.userData.health / e.userData.maxHealth) * 100;
+                    if (e.userData.healthBar) e.userData.healthBar.fill.style.width = healthPercent + '%';
+                    
                     e.userData.anger = Math.min(100, e.userData.anger + 25);
                     globalAnger = Math.min(maxAnger, globalAnger + 8);
                     updateAngerUI();
                     e.userData.labelDiv.textContent = '😠';
                     e.userData.target = bird.position.clone();
-                    showMessage('💩 Попадание!');
-                    playSound('anger');
+                    gameData.coins += 5;
+                    updateCoinsDisplay();
+                    playSound('coin');
+                    showMessage(`💩 -${5 - e.userData.health} HP! +5🪙`);
+                    
+                    if (e.userData.health <= 0) {
+                        respawnPerson(e);
+                    }
                 }
             });
+        }
+        
+        function exitToMenu() {
+            if (!gameStarted) return;
+            gameStarted = false; caged = false; nightVisionActive = false;
+            cageGroup.visible = false;
+            document.getElementById('cage-timer').style.display = 'none';
+            document.getElementById('start-menu').style.display = 'flex';
+            document.getElementById('exit-btn').classList.remove('active');
+            document.getElementById('mobile-controls').classList.remove('active');
+            document.getElementById('height-controls').classList.remove('active');
+            document.getElementById('camera-controls').classList.remove('active');
+            saveGame(); renderSkinGrid(); updateCoinsDisplay();
+            bird.position.set(0, 12, 25);
         }
         
         function showMessage(t) {
@@ -484,12 +634,9 @@
             setTimeout(() => el.style.opacity = 0, 1500);
         }
         
-        // Управление
         const keys = { w:false, q:false, e:false, space:false, shift:false, up:false, down:false, camLeft:false, camRight:false };
         let mouseX = 0, mouseY = 0.3;
-        let touchStartX = 0, touchStartY = 0;
         
-        // Мобильные кнопки
         document.querySelectorAll('.mobile-btn, .height-btn, .camera-btn').forEach(btn => {
             const action = btn.dataset.action;
             btn.addEventListener('touchstart', (e) => { e.preventDefault(); handleAction(action, true); });
@@ -507,47 +654,22 @@
                 case 'cam-left': keys.camLeft = state; break;
                 case 'cam-right': keys.camRight = state; break;
                 case 'poop': if(state) dropPoop(); break;
+                case 'ability': if(state) useAbility(); break;
+                case 'exit': if(state) exitToMenu(); break;
             }
         }
         
-        // Сенсорный обзор
-        renderer.domElement.addEventListener('touchstart', (e) => {
-            if(!gameStarted) return;
-            touchStartX = e.touches[0].clientX;
-            touchStartY = e.touches[0].clientY;
-        });
-        renderer.domElement.addEventListener('touchmove', (e) => {
-            if(!gameStarted) return;
-            e.preventDefault();
-            const dx = e.touches[0].clientX - touchStartX;
-            const dy = e.touches[0].clientY - touchStartY;
-            mouseX += dx * 0.005;
-            mouseY = Math.max(-0.5, Math.min(1.0, mouseY + dy * 0.005));
-            touchStartX = e.touches[0].clientX;
-            touchStartY = e.touches[0].clientY;
-        });
-        
         window.addEventListener('keydown', e => {
-            if(!gameStarted || controlMode !== 'pc') return;
-            switch(e.code) {
-                case 'KeyW': keys.w=true; break;
-                case 'KeyQ': keys.q=true; break;
-                case 'KeyE': keys.e=true; break;
-                case 'Space': keys.space=true; break;
-                case 'ShiftLeft': case 'ShiftRight': keys.shift=true; break;
-                case 'KeyF': dropPoop(); break;
-            }
+            if (!gameStarted) return;
+            if (e.code === 'KeyL') { exitToMenu(); e.preventDefault(); return; }
+            if (e.code === 'KeyR') { useAbility(); e.preventDefault(); return; }
+            if (controlMode !== 'pc') return;
+            switch(e.code) { case 'KeyW': keys.w=true; break; case 'KeyQ': keys.q=true; break; case 'KeyE': keys.e=true; break; case 'Space': keys.space=true; break; case 'ShiftLeft': case 'ShiftRight': keys.shift=true; break; case 'KeyF': dropPoop(); break; }
             e.preventDefault();
         });
         window.addEventListener('keyup', e => {
-            if(controlMode !== 'pc') return;
-            switch(e.code) {
-                case 'KeyW': keys.w=false; break;
-                case 'KeyQ': keys.q=false; break;
-                case 'KeyE': keys.e=false; break;
-                case 'Space': keys.space=false; break;
-                case 'ShiftLeft': case 'ShiftRight': keys.shift=false; break;
-            }
+            if (!gameStarted || controlMode !== 'pc') return;
+            switch(e.code) { case 'KeyW': keys.w=false; break; case 'KeyQ': keys.q=false; break; case 'KeyE': keys.e=false; break; case 'Space': keys.space=false; break; case 'ShiftLeft': case 'ShiftRight': keys.shift=false; break; }
         });
         
         document.addEventListener('mousemove', e => {
@@ -561,19 +683,18 @@
         document.getElementById('start-game-btn').addEventListener('click', () => {
             document.getElementById('start-menu').style.display = 'none';
             gameStarted = true;
+            updatePreviewBird();
             bird.position.set(0, 12, 25);
+            document.getElementById('exit-btn').classList.add('active');
             if(controlMode === 'mobile') {
                 document.getElementById('mobile-controls').classList.add('active');
                 document.getElementById('height-controls').classList.add('active');
                 document.getElementById('camera-controls').classList.add('active');
-            } else {
-                renderer.domElement.requestPointerLock();
-            }
+            } else renderer.domElement.requestPointerLock();
             showMessage('🦅 Взлетаем!');
             initAudio();
         });
         
-        // Анимация
         let wingFlap = 0, lastTime = performance.now();
         const camDir = new THREE.Vector3();
         
@@ -581,6 +702,28 @@
             requestAnimationFrame(animate);
             const delta = Math.min(0.1, (time - lastTime)/1000);
             lastTime = time;
+            
+            dayTime = (Math.sin(time * 0.0001) + 1) * 0.5;
+            const dayFactor = dayTime;
+            const nightFactor = 1 - dayTime;
+            
+            // Ночное зрение совы
+            const isOwl = baseSkins[selectedSkinIndex].name === 'Сова';
+            const brightness = (nightVisionActive && isOwl) ? 1.0 : (0.3 + dayFactor * 0.4);
+            
+            scene.background.setHSL(0.58, 0.5, 0.2 + brightness * 0.4);
+            scene.fog.color.copy(scene.background);
+            
+            ambientLight.intensity = (nightVisionActive && isOwl) ? 0.8 : (0.3 + dayFactor * 0.4);
+            sunLight.intensity = dayFactor * 1.5;
+            sunLight.color.setHSL(0.1, 0.8, 0.5 + dayFactor * 0.3);
+            moonLight.intensity = (nightVisionActive && isOwl) ? 0.2 : (nightFactor * 0.5);
+            
+            const timeEl = document.getElementById('time-indicator');
+            if (dayFactor > 0.7) timeEl.innerHTML = '🌞 День';
+            else if (dayFactor > 0.3) timeEl.innerHTML = '🌅 Рассвет/Закат';
+            else timeEl.innerHTML = '🌙 Ночь';
+            if (nightVisionActive && isOwl) timeEl.innerHTML += ' 🦉';
             
             if(!gameStarted) {
                 bird.position.y = 12 + Math.sin(time*0.003)*1.5;
@@ -596,10 +739,9 @@
                 return;
             }
             
-            if(poopCooldown > 0) {
-                poopCooldown = Math.max(0, poopCooldown - delta);
-                document.getElementById('poop-cooldown-text').textContent = poopCooldown>0 ? `💩 ${poopCooldown.toFixed(1)}с` : '💩 Готов';
-            }
+            if(poopCooldown > 0) { poopCooldown = Math.max(0, poopCooldown - delta); }
+            if(abilityCooldown > 0) { abilityCooldown = Math.max(0, abilityCooldown - delta); }
+            document.getElementById('ability-status').textContent = abilityCooldown>0 ? `✨ ${abilityCooldown.toFixed(1)}с` : '✨ Готов';
             
             if(caged) {
                 const remaining = Math.max(0, cageEndTime - performance.now());
@@ -608,122 +750,98 @@
                     caged = false; cageGroup.visible = false;
                     document.getElementById('cage-timer').style.display = 'none';
                     document.getElementById('cage-alert').innerHTML = '✅';
-                } else {
-                    bird.position.copy(cageGroup.position).add(new THREE.Vector3(0,1.5,0));
-                }
+                } else bird.position.copy(cageGroup.position).add(new THREE.Vector3(0,1.5,0));
             }
             
             if(!caged) {
-                camera.getWorldDirection(camDir);
-                camDir.y = 0; camDir.normalize();
-                
-                // Поворот камеры кнопками (для телефона)
+                camera.getWorldDirection(camDir); camDir.y = 0; camDir.normalize();
                 if(keys.camLeft) mouseX -= 0.025;
                 if(keys.camRight) mouseX += 0.025;
-                
+                const skin = baseSkins[selectedSkinIndex], spd = skin.speed, agi = skin.agility;
                 if(controlMode === 'mobile') {
-                    if(keys.w) { bird.position.x += camDir.x*0.4; bird.position.z += camDir.z*0.4; }
-                    if(keys.up) bird.position.y += 0.25;
-                    if(keys.down) bird.position.y -= 0.25;
+                    if(keys.w) { bird.position.x += camDir.x*0.4*spd; bird.position.z += camDir.z*0.4*spd; }
+                    if(keys.up) bird.position.y += 0.25*agi;
+                    if(keys.down) bird.position.y -= 0.25*agi;
                 } else {
-                    if(keys.w) { bird.position.x += camDir.x*0.5; bird.position.z += camDir.z*0.5; }
-                    if(keys.q) mouseX -= 0.025;
-                    if(keys.e) mouseX += 0.025;
-                    if(keys.space) bird.position.y += 0.3;
-                    if(keys.shift) bird.position.y -= 0.3;
+                    if(keys.w) { bird.position.x += camDir.x*0.5*spd; bird.position.z += camDir.z*0.5*spd; }
+                    if(keys.q) mouseX -= 0.025*agi;
+                    if(keys.e) mouseX += 0.025*agi;
+                    if(keys.space) bird.position.y += 0.3*agi;
+                    if(keys.shift) bird.position.y -= 0.3*agi;
                 }
-                
                 bird.position.y = Math.max(4, Math.min(40, bird.position.y));
                 ['x','z'].forEach(ax => { if(Math.abs(bird.position[ax]) > boundary-6) bird.position[ax] = Math.sign(bird.position[ax])*(boundary-6); });
                 
-                // Камера следит за птицей
                 const offset = new THREE.Vector3(-9, 5, 12);
                 offset.applyEuler(new THREE.Euler(mouseY, mouseX, 0, 'YXZ'));
                 camera.position.copy(bird.position).add(offset);
                 camera.lookAt(bird.position.clone().add(new THREE.Vector3(0, 2, 0)));
-                
-                // Птица всегда смотрит вперёд по камере
                 bird.rotation.y = mouseX;
             }
             
             wingFlap += 0.25;
-            const flap = Math.sin(wingFlap)*0.45;
-            leftWing.rotation.z = -0.4 + flap*0.4;
-            rightWing.rotation.z = 0.4 - flap*0.4;
+            leftWing.rotation.z = -0.4 + Math.sin(wingFlap)*0.4;
+            rightWing.rotation.z = 0.4 - Math.sin(wingFlap)*0.4;
             
             globalAnger = Math.max(0, globalAnger - delta*0.5);
             updateAngerUI();
             
-            // Пули
             bullets.forEach((b,i) => {
                 b.position.add(b.userData.velocity.clone().multiplyScalar(delta*60));
-                b.userData.velocity.y -= delta*6;
-                
-                if(!b.userData.soundPlayed && b.position.distanceTo(bird.position) < 15) {
-                    b.userData.soundPlayed = true;
-                    playSound('bullet_fly');
-                }
-                
-                if(b.material) {
-                    b.material.emissiveIntensity = 0.6 + Math.sin(time*0.03)*0.4;
-                }
-                
-                if(b.position.y < 0.5 || b.position.distanceTo(bird.position) < 4.5) {
-                    if(b.position.distanceTo(bird.position) < 4.5 && !caged) {
-                        captureBird();
-                        showMessage('💥 Попадание!');
-                    }
-                    scene.remove(b); bullets.splice(i,1);
-                }
+                b.userData.velocity.y -= delta * 2;
+                const age = performance.now() - (b.userData.birthTime || 0);
+                if (!b.userData.birthTime) b.userData.birthTime = performance.now();
+                if (b.position.y < 0.5 || age > 10000) { scene.remove(b); bullets.splice(i,1); }
+                else if (b.position.distanceTo(bird.position) < 4.5 && !caged) { captureBird(); scene.remove(b); bullets.splice(i,1); }
             });
             
             droppings.forEach((d,i) => {
-                d.position.y += d.userData.velocity.y*delta*60;
-                d.userData.velocity.y -= delta*10;
-                if(d.position.y < 0.3) { scene.remove(d); droppings.splice(i,1); }
+                d.position.y += d.userData.velocity.y * delta * 60;
+                d.userData.velocity.y -= delta * 8;
+                entities.forEach(e => {
+                    if(e.userData.type !== 'animal' && d.position.distanceTo(e.position) < 3.5) {
+                        e.userData.health--;
+                        const healthPercent = (e.userData.health / e.userData.maxHealth) * 100;
+                        if (e.userData.healthBar) e.userData.healthBar.fill.style.width = healthPercent + '%';
+                        
+                        e.userData.anger = Math.min(100, e.userData.anger + 25);
+                        globalAnger = Math.min(maxAnger, globalAnger + 8);
+                        updateAngerUI();
+                        e.userData.labelDiv.textContent = '😠';
+                        e.userData.target = bird.position.clone();
+                        gameData.coins += 5; updateCoinsDisplay(); playSound('coin');
+                        showMessage(`💩 -${5 - e.userData.health} HP! +5🪙`);
+                        
+                        if (e.userData.health <= 0) respawnPerson(e);
+                        scene.remove(d); droppings.splice(i,1);
+                    }
+                });
+                if(d.position.y < 0.3 || performance.now() - d.userData.birthTime > d.userData.lifetime) {
+                    scene.remove(d); droppings.splice(i,1);
+                }
             });
             
-            // NPC
             entities.forEach(e => {
                 if(!e.parent) return;
                 const d = e.userData;
                 d.anger = Math.max(0, d.anger - delta*2);
                 if(d.anger > 20) d.labelDiv.textContent = '😠';
                 else d.labelDiv.textContent = d.type==='hunter'?'Охотник':'Житель';
-                
-                if(d.type !== 'animal' && (d.anger > 15 || globalAnger > 10)) {
-                    d.target = bird.position.clone();
-                }
-                
+                if(d.type !== 'animal' && (d.anger > 15 || globalAnger > 10)) d.target = bird.position.clone();
                 if(d.target) {
                     const dir = new THREE.Vector3().subVectors(d.target, e.position);
-                    if(dir.length() < 3.0) {
-                        if(d.type==='hunter' && !caged && globalAnger >= 10) captureBird();
-                        d.target = null;
-                    } else {
-                        dir.normalize();
-                        e.position.x += dir.x * d.speed * delta * 60;
-                        e.position.z += dir.z * d.speed * delta * 60;
-                    }
-                } else if(Math.random() < delta * 0.3) {
-                    d.target = new THREE.Vector3(e.position.x+(Math.random()-0.5)*12, 0, e.position.z+(Math.random()-0.5)*12);
-                }
+                    if(dir.length() < 3.0) { if(d.type==='hunter' && !caged && globalAnger >= 10) captureBird(); d.target = null; }
+                    else { dir.normalize(); e.position.x += dir.x * d.speed * delta * 60; e.position.z += dir.z * d.speed * delta * 60; }
+                } else if(Math.random() < delta * 0.3) d.target = new THREE.Vector3(e.position.x+(Math.random()-0.5)*12, 0, e.position.z+(Math.random()-0.5)*12);
                 
                 if(d.type === 'hunter' && !caged && globalAnger >= 10) {
-                    const dist = e.position.distanceTo(bird.position);
-                    if(dist < 35 && performance.now() - d.lastShot > 2000) {
-                        d.lastShot = performance.now();
-                        playSound('shoot');
-                        
-                        const bullet = new THREE.Mesh(new THREE.SphereGeometry(0.45), 
-                            new THREE.MeshStandardMaterial({color: 0xffaa00, emissive: 0xff4400, emissiveIntensity: 1.2}));
+                    if(e.position.distanceTo(bird.position) < 210 && performance.now() - d.lastShot > 15000) {
+                        d.lastShot = performance.now(); playSound('shoot');
+                        const bullet = new THREE.Mesh(new THREE.SphereGeometry(0.5), new THREE.MeshStandardMaterial({color:0xffaa00, emissive:0xff4400, emissiveIntensity:1.2}));
                         bullet.position.copy(e.position).add(new THREE.Vector3(0,1.5,0));
-                        
-                        const dir = new THREE.Vector3().subVectors(bird.position, e.position).normalize();
-                        bullet.userData = {velocity: dir.multiplyScalar(0.6), soundPlayed: false};
+                        bullet.userData = {velocity: new THREE.Vector3().subVectors(bird.position, e.position).normalize().multiplyScalar(0.8), birthTime: performance.now()};
                         bullet.castShadow = true;
-                        scene.add(bullet);
-                        bullets.push(bullet);
+                        scene.add(bullet); bullets.push(bullet);
                         showMessage('🔫 Выстрел!');
                     }
                 }
@@ -734,7 +852,6 @@
         }
         
         requestAnimationFrame(animate);
-        
         window.addEventListener('resize', () => {
             camera.aspect = window.innerWidth/window.innerHeight;
             camera.updateProjectionMatrix();
